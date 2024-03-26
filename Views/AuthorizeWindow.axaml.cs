@@ -12,6 +12,11 @@ public partial class AuthorizeWindow : Window
         InitializeComponent();
     }
 
+    /// <summary>
+    /// Авторизация сотрудника
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void Authorize(object sender, RoutedEventArgs e)
     {
         try

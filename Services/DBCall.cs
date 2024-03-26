@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Session2v2.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -11,6 +12,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Session2v2.Services
 {
+    /// <summary>
+    /// класс со статическими методами-запросами к web-api
+    /// </summary>
     public static class DBCall
     {
         private static HttpClient _client = new HttpClient
@@ -29,7 +33,7 @@ namespace Session2v2.Services
         {
             string dataSerialized = JsonConvert.SerializeObject(code);
             StringContent serializedContent = new StringContent(dataSerialized, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress+ "/Authorization", serializedContent);
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/Authorization", serializedContent);
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
@@ -38,6 +42,10 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
+        /// <summary>
+        /// Возвращает абсолютно все заявки из бд 
+        /// </summary>
+        /// <returns></returns>
         public static async Task<List<Request>> GetAllRequestsAsync()
         {
             List<Request> requests = new List<Request>();
@@ -48,6 +56,11 @@ namespace Session2v2.Services
             return requests;
         }
 
+        /// <summary>
+        /// Возвращает список личных заявок из бд
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private static async Task<List<PrivateRequest>> GetPrivateRequestsAsync()
         {
             HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetPrivateRequests");
@@ -61,6 +74,11 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
+        /// <summary>
+        /// Возвращает список групповых заявок из бд
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private static async Task<List<GroupRequest>> GetGroupRequestsAsync()
         {
             HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetGroupRequests");
@@ -68,8 +86,60 @@ namespace Session2v2.Services
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
                 List<GroupRequest> groupRequest = JsonConvert.DeserializeObject<List<GroupRequest>>(answer);
+                groupRequest = groupRequest.OfType<GroupRequest>().ToList();
                 GroupRequest.ConvertByteToBitmap(groupRequest);
                 return groupRequest;
+            }
+            throw new Exception();
+        }
+
+        /// <summary>
+        /// Возвращает список отделов
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static async Task<ObservableCollection<string>> GetDepartmentsAsync()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetDepartments");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<string> departments = JsonConvert.DeserializeObject<ObservableCollection<string>>(answer);
+                return departments;
+            }
+            throw new Exception();
+        }
+
+        /// <summary>
+        /// Возвращает список статусов заявки
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static async Task<ObservableCollection<string>> GetStatusesAsync()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetStatuses");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<string> statuses = JsonConvert.DeserializeObject<ObservableCollection<string>>(answer);
+                return statuses;
+            }
+            throw new Exception();
+        }
+
+       /// <summary>
+       /// Возвращает список типов заявок
+       /// </summary>
+       /// <returns></returns>
+       /// <exception cref="Exception"></exception>
+        public static async Task<ObservableCollection<string>> GetMeetingTypesAsync()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetMeetingTypes");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<string> statuses = JsonConvert.DeserializeObject<ObservableCollection<string>>(answer);
+                return statuses;
             }
             throw new Exception();
         }

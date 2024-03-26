@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Session2v2.ViewModels"
+		xmlns:local="clr-namespace:Session2v2.ViewModels"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Session2v2.Views.MainWindow"
 		x:DataType="vm:MainWindowViewModel"
@@ -12,5 +13,72 @@
 	    <Window.Styles>
 		    <StyleInclude Source="/Styles/MainWindowStyles.axaml"/>
 	    </Window.Styles>
-	
+
+	<StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<ComboBox ItemsSource="{Binding DepartmentList}" SelectedItem="{Binding SelectedDepartment}" Margin="10"></ComboBox>
+
+			<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" Margin="10"></ComboBox>
+
+			<ComboBox ItemsSource="{Binding TypeList}" SelectedItem="{Binding SelectedType}" Margin="10"></ComboBox>
+			<TextBlock Text="{Binding ErrorMessage}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="IndianRed"></TextBlock>
+		</StackPanel>
+		<Grid ColumnDefinitions="150, *" Height="750" MinHeight="560" Background="White">
+			<ListBox ItemsSource="{Binding FilteredRequests}" SelectedItem="{Binding SelectedRequest}" SelectionMode="Single" Width="150" Grid.Column="0" HorizontalAlignment="Left">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Guest.LastName}"/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Viewbox Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" MaxHeight="800" MinHeight="400" MinWidth="400">
+				<Grid ColumnDefinitions="2*, *, *">
+					<Image Source="{Binding SelectedRequest.Guest.AvatarBitmap}" Margin="5" Grid.Column="0" MaxHeight="200"/>
+					<Grid ColumnDefinitions="*, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<TextBlock Text="Имя: " Grid.Column="0" Grid.Row="0" />
+						<TextBlock Text="Фамилия: " Grid.Column="0" Grid.Row="1"/>
+						<TextBlock Text="Отчество: " Grid.Column="0" Grid.Row="2"/>
+						<TextBlock Text="Номер телефона: " Grid.Column="0" Grid.Row="3"/>
+						<TextBlock Text="Почта: " Grid.Column="0" Grid.Row="4"/>
+						<TextBlock Text="Примечание: " Grid.Column="0" Grid.Row="5"/>
+						<TextBlock Text="День рождения: " Grid.Column="0" Grid.Row="6"/>
+						<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="7"/>
+						<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="8"/>
+
+						<TextBlock Text="{Binding SelectedRequest.Guest.Name}" Grid.Column="1" Grid.Row="0" />
+						<TextBlock Text="{Binding SelectedRequest.Guest.LastName}" Grid.Column="1" Grid.Row="1"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.Patronymic}" Grid.Column="1" Grid.Row="2"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.Phone}" Grid.Column="1" Grid.Row="3"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.Email}" Grid.Column="1" Grid.Row="4"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.Note}" Grid.Column="1" Grid.Row="5"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.Birthday}" Grid.Column="1" Grid.Row="6"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.PassportSeries}" Grid.Column="1" Grid.Row="7"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.PassportNumber}" Grid.Column="1" Grid.Row="8"/>
+					</Grid>
+
+					<Grid ColumnDefinitions="*, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<TextBlock Text="Тип посещения: " Grid.Column="0" Grid.Row="0"/>
+						<TextBlock Text="Организация: " Grid.Column="0" Grid.Row="1"/>
+						<TextBlock Text="Начало действия пропуска: " Grid.Column="0" Grid.Row="2"/>
+						<TextBlock Text="Конец действия пропуска: " Grid.Column="0" Grid.Row="3"/>
+						<TextBlock Text="Отдел: " Grid.Column="0" Grid.Row="4"/>
+						<TextBlock Text="Сотрудник: " Grid.Column="0" Grid.Row="5"/>
+						<TextBlock Text="Цель: " Grid.Column="0" Grid.Row="6"/>
+						<TextBlock Text="Статус: " Grid.Column="0" Grid.Row="7"/>
+
+
+						<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType}" Grid.Column="1" Grid.Row="0"/>
+						<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="1" Grid.Row="1"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.DateFrom}" Grid.Column="1" Grid.Row="2"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.DateTo}" Grid.Column="1" Grid.Row="3"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.Department}" Grid.Column="1" Grid.Row="4"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="1" Grid.Row="5"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="1" Grid.Row="6"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.Status}"  Grid.Column="1" Grid.Row="7"/>
+						<Button Content="Изменить" Grid.Column="1" Grid.Row="8"/>
+					</Grid>
+				</Grid>
+			</Viewbox>
+		</Grid>
+	</StackPanel>
 </Window>

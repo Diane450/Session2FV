@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Session2v2.Models
 {
-    public class PrivateRequest:Request
+    public class PrivateRequest : Request
     {
         public static List<PrivateRequest> ConvertByteToBitmap(List<PrivateRequest> requests)
         {
@@ -22,7 +22,7 @@ namespace Session2v2.Models
                 if (IsPhotoesEmptyOrNull(requests[i].Guest.PassportBytes))
                 {
                     MemoryStream ms = new MemoryStream(requests[i].Guest.PassportBytes);
-                    requests[i].Guest.AvatarBitmap = new Bitmap(ms);
+                    requests[i].Guest.PassportBitmap = new Bitmap(ms);
                 }
             }
             return requests;

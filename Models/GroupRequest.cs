@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Session2v2.Models
 {
     public class GroupRequest : Request
     {
-        public Guest Guest { get; set; } = null!;
-        public Meeting Meeting { get; set; } = null!;
+        [JsonConstructor]
+        public GroupRequest()
+        {
+            
+        }
 
         public static List<GroupRequest> ConvertByteToBitmap(List<GroupRequest> requests)
         {
@@ -25,7 +29,7 @@ namespace Session2v2.Models
                 if (IsPhotoesEmptyOrNull(requests[i].Guest.PassportBytes))
                 {
                     MemoryStream ms = new MemoryStream(requests[i].Guest.PassportBytes);
-                    requests[i].Guest.AvatarBitmap = new Bitmap(ms);
+                    requests[i].Guest.PassportBitmap = new Bitmap(ms);
                 }
             }
             return requests;
@@ -33,11 +37,6 @@ namespace Session2v2.Models
         private static bool IsPhotoesEmptyOrNull(byte[] photo)
         {
             return photo != null && photo.Length > 0;
-        }
-
-        public List<Request> ConvertByteToBitmap(List<Request> requests)
-        {
-            throw new NotImplementedException();
         }
     }
 }

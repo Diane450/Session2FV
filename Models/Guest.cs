@@ -9,6 +9,9 @@ using Tmds.DBus.SourceGenerator;
 
 namespace Session2v2.Models
 {
+    /// <summary>
+    /// Информация о госте в заявке
+    /// </summary>
     public class Guest: INotifyPropertyChanged
     {
         public int Id { get; set; }
