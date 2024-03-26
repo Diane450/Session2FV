@@ -42,8 +42,8 @@ namespace Session2v2.Models
             }
         }
 
-        private string _status = null!;
-        public string Status
+        private Status _status = null!;
+        public Status Status
         {
             get
             {
@@ -74,11 +74,11 @@ namespace Session2v2.Models
 
         public string VisitPurpose { get; set; } = null!;
 
-        public string Department { get; set; } = null!;
+        public Department Department { get; set; } = null!;
 
         public string FullNameEmployee { get; set; } = null!;
 
-        public string MeetingType { get; set; } = null!;
+        public MeetingType MeetingType { get; set; } = null!;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

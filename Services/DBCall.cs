@@ -98,13 +98,13 @@ namespace Session2v2.Services
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task<ObservableCollection<string>> GetDepartmentsAsync()
+        public static async Task<ObservableCollection<Department>> GetDepartmentsAsync()
         {
             HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetDepartments");
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
-                ObservableCollection<string> departments = JsonConvert.DeserializeObject<ObservableCollection<string>>(answer);
+                ObservableCollection<Department> departments = JsonConvert.DeserializeObject<ObservableCollection<Department>>(answer);
                 return departments;
             }
             throw new Exception();
@@ -115,13 +115,13 @@ namespace Session2v2.Services
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task<ObservableCollection<string>> GetStatusesAsync()
+        public static async Task<ObservableCollection<Status>> GetStatusesAsync()
         {
             HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetStatuses");
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
-                ObservableCollection<string> statuses = JsonConvert.DeserializeObject<ObservableCollection<string>>(answer);
+                ObservableCollection<Status> statuses = JsonConvert.DeserializeObject<ObservableCollection<Status>>(answer);
                 return statuses;
             }
             throw new Exception();
@@ -132,13 +132,13 @@ namespace Session2v2.Services
        /// </summary>
        /// <returns></returns>
        /// <exception cref="Exception"></exception>
-        public static async Task<ObservableCollection<string>> GetMeetingTypesAsync()
+        public static async Task<ObservableCollection<MeetingType>> GetMeetingTypesAsync()
         {
             HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetMeetingTypes");
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
-                ObservableCollection<string> statuses = JsonConvert.DeserializeObject<ObservableCollection<string>>(answer);
+                ObservableCollection<MeetingType> statuses = JsonConvert.DeserializeObject<ObservableCollection<MeetingType>>(answer);
                 return statuses;
             }
             throw new Exception();

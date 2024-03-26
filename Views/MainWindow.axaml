@@ -16,11 +16,11 @@
 
 	<StackPanel>
 		<StackPanel Orientation="Horizontal">
-			<ComboBox ItemsSource="{Binding DepartmentList}" SelectedItem="{Binding SelectedDepartment}" Margin="10"></ComboBox>
+			<ComboBox ItemsSource="{Binding DepartmentList}" SelectedItem="{Binding SelectedDepartment}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="10"></ComboBox>
 
-			<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" Margin="10"></ComboBox>
+			<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="10"></ComboBox>
 
-			<ComboBox ItemsSource="{Binding TypeList}" SelectedItem="{Binding SelectedType}" Margin="10"></ComboBox>
+			<ComboBox ItemsSource="{Binding TypeList}" SelectedItem="{Binding SelectedType}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="10"></ComboBox>
 			<TextBlock Text="{Binding ErrorMessage}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="IndianRed"></TextBlock>
 		</StackPanel>
 		<Grid ColumnDefinitions="150, *" Height="750" MinHeight="560" Background="White">
@@ -67,14 +67,14 @@
 						<TextBlock Text="Статус: " Grid.Column="0" Grid.Row="7"/>
 
 
-						<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType}" Grid.Column="1" Grid.Row="0"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType.Name}" Grid.Column="1" Grid.Row="0"/>
 						<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="1" Grid.Row="1"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.DateFrom}" Grid.Column="1" Grid.Row="2"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.DateTo}" Grid.Column="1" Grid.Row="3"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.Department}" Grid.Column="1" Grid.Row="4"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.Department.Name}" Grid.Column="1" Grid.Row="4"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="1" Grid.Row="5"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="1" Grid.Row="6"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.Status}"  Grid.Column="1" Grid.Row="7"/>
+						<TextBlock Text="{Binding SelectedRequest.Meeting.Status.Name}"  Grid.Column="1" Grid.Row="7"/>
 						<Button Content="Изменить" Grid.Column="1" Grid.Row="8"/>
 					</Grid>
 				</Grid>
