@@ -17,11 +17,10 @@ namespace Session2v2.Services
     /// </summary>
     public static class DBCall
     {
-        private static HttpClient _client = new HttpClient
+        private static readonly HttpClient _client = new()
         {
             BaseAddress = new Uri("http://localhost:5159/api/Subdepartment")
         };
-
 
         /// <summary>
         /// Авторизация пользователя в программе через код, который содержит только цифры
@@ -32,7 +31,7 @@ namespace Session2v2.Services
         public static async Task<bool> AuthorizeAsync(string code)
         {
             string dataSerialized = JsonConvert.SerializeObject(code);
-            StringContent serializedContent = new StringContent(dataSerialized, Encoding.UTF8, "application/json");
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/Authorization", serializedContent);
             if (response.IsSuccessStatusCode)
             {
@@ -48,7 +47,7 @@ namespace Session2v2.Services
         /// <returns></returns>
         public static async Task<List<Request>> GetAllRequestsAsync()
         {
-            List<Request> requests = new List<Request>();
+            List<Request> requests = new();
             List<GroupRequest> groupRequests = await GetGroupRequestsAsync();
             List<PrivateRequest> privateRequests = await GetPrivateRequestsAsync();
             requests.AddRange(groupRequests);
@@ -68,8 +67,8 @@ namespace Session2v2.Services
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
                 List<PrivateRequest> privateRequest = JsonConvert.DeserializeObject<List<PrivateRequest>>(answer);
-                PrivateRequest.ConvertByteToBitmap(privateRequest);
-                return JsonConvert.DeserializeObject<List<PrivateRequest>>(answer);
+                //PrivateRequest.ConvertByteToBitmap(privateRequest);
+                return privateRequest;
             }
             throw new Exception();
         }
@@ -86,8 +85,7 @@ namespace Session2v2.Services
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
                 List<GroupRequest> groupRequest = JsonConvert.DeserializeObject<List<GroupRequest>>(answer);
-                groupRequest = groupRequest.OfType<GroupRequest>().ToList();
-                GroupRequest.ConvertByteToBitmap(groupRequest);
+                //GroupRequest.ConvertByteToBitmap(groupRequest);
                 return groupRequest;
             }
             throw new Exception();
@@ -127,11 +125,11 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
-       /// <summary>
-       /// Возвращает список типов заявок
-       /// </summary>
-       /// <returns></returns>
-       /// <exception cref="Exception"></exception>
+        /// <summary>
+        /// Возвращает список типов заявок
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ObservableCollection<MeetingType>> GetMeetingTypesAsync()
         {
             HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetMeetingTypes");
@@ -143,5 +141,63 @@ namespace Session2v2.Services
             }
             throw new Exception();
         }
+
+        /// <summary>
+        /// Возвращает список причин отказа заявок
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+
+        public static async Task<ObservableCollection<DeniedReason>> GetDeniedReasonsAsync()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetDeniedReasons");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<DeniedReason> statuses = JsonConvert.DeserializeObject<ObservableCollection<DeniedReason>>(answer);
+                return statuses;
+            }
+            throw new Exception();
+        }
+
+        public static async Task<bool> IsGuestBlackListedAsync(int id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/IsGuestBlackListed", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<bool>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<DeniedReason> GetPrivateRequestDeniedReasonAsync(int id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetPrivateRequestDeniedReason", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<DeniedReason>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<DeniedReason> GetGroupRequestDeniedReasonAsync(int id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetGroupRequestDeniedReason", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<DeniedReason>(answer);
+            }
+            throw new Exception();
+        }
+
     }
 }

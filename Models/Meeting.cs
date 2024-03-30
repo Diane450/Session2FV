@@ -11,11 +11,11 @@ namespace Session2v2.Models
     public class Meeting: INotifyPropertyChanged
     {
         public int Id { get; set; }
-        public string DateTo { get; set; } = null!;
-        public string DateFrom { get; set; } = null!;
+        public DateOnly DateTo { get; set; }
+        public DateOnly DateFrom { get; set; }
 
-        private string? _dateVisit;
-        public string? DateVisit
+        private DateOnly? _dateVisit;
+        public DateOnly? DateVisit
         {
             get
             {
@@ -28,8 +28,8 @@ namespace Session2v2.Models
             }
         }
 
-        private string? _time;
-        public string? Time
+        private TimeOnly? _time;
+        public TimeOnly? Time
         {
             get
             {
@@ -53,22 +53,6 @@ namespace Session2v2.Models
             {
                 _status = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
-            }
-        }
-
-
-        private string? _deniedReason;
-
-        public string? DeniedReason
-        {
-            get
-            {
-                return _deniedReason;
-            }
-            set
-            {
-                _deniedReason = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeniedReason)));
             }
         }
 

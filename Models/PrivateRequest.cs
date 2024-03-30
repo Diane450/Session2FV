@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
+using Session2v2.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,26 +11,9 @@ namespace Session2v2.Models
 {
     public class PrivateRequest : Request
     {
-        public static List<PrivateRequest> ConvertByteToBitmap(List<PrivateRequest> requests)
+        public async override Task GetDeniedReason()
         {
-            for (int i = 0; i < requests.Count; i++)
-            {
-                if (IsPhotoesEmptyOrNull(requests[i].Guest.AvatarBytes))
-                {
-                    MemoryStream ms = new MemoryStream(requests[i].Guest.AvatarBytes);
-                    requests[i].Guest.AvatarBitmap = new Bitmap(ms);
-                }
-                if (IsPhotoesEmptyOrNull(requests[i].Guest.PassportBytes))
-                {
-                    MemoryStream ms = new MemoryStream(requests[i].Guest.PassportBytes);
-                    requests[i].Guest.PassportBitmap = new Bitmap(ms);
-                }
-            }
-            return requests;
-        }
-        private static bool IsPhotoesEmptyOrNull(byte[] photo)
-        {
-            return photo != null && photo.Length > 0;
+            await DBCall.GetPrivateRequestDeniedReasonAsync(Meeting.Id);
         }
     }
 }

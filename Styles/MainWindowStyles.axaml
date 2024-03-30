@@ -3,4 +3,8 @@
 	<Style Selector="TextBlock">
 		<Setter Property="Margin" Value="5"/>
 	</Style>
+
+	<Style Selector="Image">
+		<Setter Property="Margin" Value="5"/>
+	</Style>
 </Styles>

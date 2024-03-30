@@ -29,7 +29,7 @@ namespace Session2v2.ViewModels
         public Request SelectedRequest
         {
             get { return _selectedRequest; }
-            set { _selectedRequest = this.RaiseAndSetIfChanged(ref _selectedRequest, value); }
+            set { _selectedRequest = this.RaiseAndSetIfChanged(ref _selectedRequest, value); SelectedRequest?.ConvertAvatarByteToBitmap(); }
         }
 
         private ObservableCollection<Department> _departmantList = null!;
@@ -105,9 +105,9 @@ namespace Session2v2.ViewModels
                 await GetListsContentAsync();
                 SetSelectedValues();
             }
-            catch (Exception ex)
+            catch
             {
-                throw;
+                ErrorMessage = "Ошибка соединения";
             }
         }
 
@@ -117,6 +117,8 @@ namespace Session2v2.ViewModels
         private void Filter()
         {
             var filteredList = new List<Request>(requests);
+
+            Request r = filteredList.Where(q => q.Meeting.Id == 65).First();
 
             if (SelectedType != TypeList[0] && SelectedType != null)
             {

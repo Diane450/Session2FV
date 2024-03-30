@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
+using Session2v2.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,32 +12,9 @@ namespace Session2v2.Models
 {
     public class GroupRequest : Request
     {
-        [JsonConstructor]
-        public GroupRequest()
+        public override async Task GetDeniedReason()
         {
-            
-        }
-
-        public static List<GroupRequest> ConvertByteToBitmap(List<GroupRequest> requests)
-        {
-            for (int i = 0; i < requests.Count; i++)
-            {
-                if (IsPhotoesEmptyOrNull(requests[i].Guest.AvatarBytes))
-                {
-                    MemoryStream ms = new MemoryStream(requests[i].Guest.AvatarBytes);
-                    requests[i].Guest.AvatarBitmap = new Bitmap(ms);
-                }
-                if (IsPhotoesEmptyOrNull(requests[i].Guest.PassportBytes))
-                {
-                    MemoryStream ms = new MemoryStream(requests[i].Guest.PassportBytes);
-                    requests[i].Guest.PassportBitmap = new Bitmap(ms);
-                }
-            }
-            return requests;
-        }
-        private static bool IsPhotoesEmptyOrNull(byte[] photo)
-        {
-            return photo != null && photo.Length > 0;
+            await DBCall.GetGroupRequestDeniedReasonAsync(Meeting.Id);
         }
     }
 }

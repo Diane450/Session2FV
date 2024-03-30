@@ -14,6 +14,6 @@
 		<TextBox Text="{Binding Code}" x:Name="Code" VerticalAlignment="Center" Margin="15 10" Watermark="Код сотрудника"></TextBox>
 		<Label x:Name="ErrorLabel" Classes="ErrorLabel" Margin="15 0 0 15" IsVisible="false" Foreground="IndianRed"/>
 		<Button IsEnabled="{Binding IsAuthEnable}" Click="Authorize" x:Name="MyButton" HorizontalAlignment="Center" Padding="10" Background="DarkViolet"
-		Foreground="White">Авторизоваться</Button>
+		Foreground="White" IsDefault="True">Авторизоваться</Button>
 	</StackPanel>
 </Window>
