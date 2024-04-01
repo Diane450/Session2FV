@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Session2v2.Models
 {
-    public class Request
+    public abstract class Request
     {
         public Guest Guest { get; set; } = null!;
 
@@ -38,9 +38,6 @@ namespace Session2v2.Models
             return photo != null && photo.Length > 0;
         }
 
-        public virtual async Task GetDeniedReason()
-        {
-
-        }
+        public abstract Task<DeniedReason> GetDeniedReason();
     }
 }

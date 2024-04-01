@@ -11,9 +11,9 @@ namespace Session2v2.Models
 {
     public class PrivateRequest : Request
     {
-        public async override Task GetDeniedReason()
+        public async override Task<DeniedReason> GetDeniedReason()
         {
-            await DBCall.GetPrivateRequestDeniedReasonAsync(Meeting.Id);
+            return await DBCall.GetPrivateRequestDeniedReasonAsync(Meeting.Id);
         }
     }
 }

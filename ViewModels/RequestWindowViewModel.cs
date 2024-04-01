@@ -46,7 +46,7 @@ namespace Session2v2.ViewModels
 
         public static ObservableCollection<Status> StatusesList { get; set; } = null!;
 
-        public ObservableCollection<DeniedReason> DeniedReasonsList { get; set; } = null!;
+        public static ObservableCollection<DeniedReason> DeniedReasonsList { get; set; } = null!;
 
         private DeniedReason _selectedDeniedReason;
 
@@ -64,6 +64,22 @@ namespace Session2v2.ViewModels
             set { _isRegularPermissionShown = this.RaiseAndSetIfChanged(ref _isRegularPermissionShown, value); }
         }
 
+
+        private bool _isChangesEnable = true;
+
+        public bool IsChangesEnable
+        {
+            get { return _isChangesEnable; }
+            set { _isChangesEnable = this.RaiseAndSetIfChanged(ref _isChangesEnable, value); }
+        }
+
+        private string _message;
+
+        public string Message
+        {
+            get { return _message; }
+            set { _message = this.RaiseAndSetIfChanged(ref _message, value); }
+        }
 
 
         private RequestWindowViewModel(Request selectedRequest)
@@ -91,18 +107,6 @@ namespace Session2v2.ViewModels
             await GetListData();
 
             await SetPermissions();
-            //if (SelectedRequest.Meeting.Status.Id == 3)
-            //    await DeniedRequestPermissions();
-            //else if (await DBCall.IsGuestBlackListedAsync(SelectedRequest.Guest.Id))
-            //    BlackListPermissions();
-            //else
-            //SetPemissions();
-
-            //DeniedReasonsList = await DBCall.GetDeniedReasonsAsync();
-
-            //StatusesList = await DBCall.GetStatusesAsync();
-            //StatusesList.RemoveAt(0);
-            //SelectedStatus = SelectedRequest.Meeting.Status;
         }
 
         private async Task GetListData()
@@ -120,65 +124,49 @@ namespace Session2v2.ViewModels
 
         private async Task SetPermissions()
         {
-            bool a = IsRegularPermissionShown;
-            //if (SelectedRequest.Meeting.Id == 3)
-            //    await DeniedRequestPermissions();
-            //else if (SelectedRequest.Guest.IsBlackListed)
-            //    await BlackListGuestPermissions();
-            //else
-                await SetRegularPermissions();
+            if (SelectedRequest.Meeting.Status.Id == 3)
+                await DeniedRequestPermissions();
+            else if (await SelectedRequest.Guest.IsBlackListed())
+                BlackListGuestPermissions();
+            else
+                SetRegularPermissions();
         }
-        private async Task SetRegularPermissions()
+        private void SetRegularPermissions()
         {
-            try
-            {
-                SelectedStatus = StatusesList[0];
-                IsRegularPermissionShown = true;
-                SelectedDate = DateTime.Parse(SelectedRequest.Meeting.DateFrom.ToString());
-                DateStart = DateTime.Parse(SelectedRequest.Meeting.DateFrom.ToString());
-                DateEnd = DateTime.Parse(SelectedRequest.Meeting.DateTo.ToString());
-
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            SelectedStatus = StatusesList[0];
+            IsRegularPermissionShown = true;
+            SelectedDate = DateTime.Parse(SelectedRequest.Meeting.DateFrom.ToString());
+            DateStart = DateTime.Parse(SelectedRequest.Meeting.DateFrom.ToString());
+            DateEnd = DateTime.Parse(SelectedRequest.Meeting.DateTo.ToString());
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         private async Task DeniedRequestPermissions()
         {
             try
             {
-                SelectedStatus = SelectedRequest.Meeting.Status;
-                await SelectedRequest.GetDeniedReason();
+                DeniedReason deniedReason = await SelectedRequest.GetDeniedReason();
+                SelectedDeniedReason = DeniedReasonsList.Where(r => r.Id == deniedReason.Id).First();
+                SetDeniedStatus();
+                Message = "Заявка уже отклонена";
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
 
-        private void BlackListPermissions()
+        private void BlackListGuestPermissions()
         {
+            SelectedDeniedReason = DeniedReasonsList[0];
+            SetDeniedStatus();
+            Message = "Пользователь в черном списке";
+        }
 
+        private void SetDeniedStatus()
+        {
+            IsRegularPermissionShown = false;
+            SelectedStatus = StatusesList[2];
+            IsChangesEnable = false;
         }
     }
 }

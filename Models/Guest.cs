@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
+using Session2v2.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,7 +57,11 @@ namespace Session2v2.Models
             set { _passportBitmap = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PassportBitmap))); }
         }
 
-
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public async Task<bool> IsBlackListed()
+        {
+            return await DBCall.IsGuestBlackListedAsync(Id);
+        }
     }
 }

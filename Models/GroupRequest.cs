@@ -12,9 +12,9 @@ namespace Session2v2.Models
 {
     public class GroupRequest : Request
     {
-        public override async Task GetDeniedReason()
+        public override async Task<DeniedReason> GetDeniedReason()
         {
-            await DBCall.GetGroupRequestDeniedReasonAsync(Meeting.Id);
+            return await DBCall.GetGroupRequestDeniedReasonAsync(Meeting.Id);
         }
     }
 }

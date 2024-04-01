@@ -48,8 +48,11 @@
 						<TextBlock Text="Сотрудник: " Grid.Column="0" Grid.Row="5"/>
 						<TextBlock Text="Цель: " Grid.Column="0" Grid.Row="6"/>
 						<TextBlock Text="Статус: " Grid.Column="0" Grid.Row="7"/>
-						<TextBlock Text="Время: " Grid.Column="0" Grid.Row="8"/>
-						<TextBlock Text="Дата: " Grid.Column="0" Grid.Row="9"/>
+						<TextBlock Text="Время: " Grid.Column="0" Grid.Row="8" IsVisible="{Binding IsRegularPermissionShown}"/>
+						<TextBlock Text="Дата: " Grid.Column="0" Grid.Row="9" IsVisible="{Binding IsRegularPermissionShown}"/>
+						<TextBlock Text="Причина отказа заявки: " Grid.Column="0" Grid.Row="8" IsVisible="{Binding !IsRegularPermissionShown}"/>
+						
+						
 						
 						<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType.Name}" Grid.Column="1" Grid.Row="0"/>
 						<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="1" Grid.Row="1"/>
@@ -58,9 +61,12 @@
 						<TextBlock Text="{Binding SelectedRequest.Meeting.Department.Name}" Grid.Column="1" Grid.Row="4"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="1" Grid.Row="5"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="1" Grid.Row="6"/>
-						<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="5" Grid.Column="1" Grid.Row="7"></ComboBox>
-						<TimePicker IsEnabled="{Binding IsRegularPermissionShown}" Grid.Column="1" Grid.Row="8" SelectedTime="{Binding SelectedTime}"/>
-						<CalendarDatePicker IsEnabled="{Binding IsRegularPermissionShown}" Grid.Column="1" Grid.Row="9" SelectedDate="{Binding SelectedDate}" DisplayDateEnd="{Binding DateEnd}" DisplayDateStart="{Binding DateStart}"/>
+						<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="5" Grid.Column="1" Grid.Row="7" IsEnabled="{Binding IsChangesEnable}"></ComboBox>
+						<TimePicker IsVisible="{Binding IsRegularPermissionShown}" Grid.Column="1" Grid.Row="8" SelectedTime="{Binding SelectedTime}"/>
+						<CalendarDatePicker IsVisible="{Binding IsRegularPermissionShown}" Grid.Column="1" Grid.Row="9" SelectedDate="{Binding SelectedDate}" DisplayDateEnd="{Binding DateEnd}" DisplayDateStart="{Binding DateStart}"/>
+						
+						<ComboBox ItemsSource="{Binding DeniedReasonsList}" SelectedItem="{Binding SelectedDeniedReason}" DisplayMemberBinding="{Binding ShortName}" SelectedValueBinding="{Binding Id}" Margin="5" IsVisible="{Binding !IsRegularPermissionShown}" Grid.Column="1" Grid.Row="8" IsEnabled="{Binding IsChangesEnable}"/>
+						<TextBlock Text="{Binding Message}" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Right" Foreground="IndianRed"/>
 					</Grid>
 				</Grid>
 			</Viewbox>

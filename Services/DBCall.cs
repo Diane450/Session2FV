@@ -160,6 +160,12 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
+        /// <summary>
+        /// Проверяет, находится ли гость в черном списке
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<bool> IsGuestBlackListedAsync(int id)
         {
             string dataSerialized = JsonConvert.SerializeObject(id);
@@ -173,6 +179,12 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
+        /// <summary>
+        /// Возвращает причину, по которой был отклонена личная заявка
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<DeniedReason> GetPrivateRequestDeniedReasonAsync(int id)
         {
             string dataSerialized = JsonConvert.SerializeObject(id);
@@ -186,6 +198,12 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
+        /// <summary>
+        /// Вовращает причину, по которой была отклонена групповая заявка
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<DeniedReason> GetGroupRequestDeniedReasonAsync(int id)
         {
             string dataSerialized = JsonConvert.SerializeObject(id);
@@ -198,6 +216,5 @@ namespace Session2v2.Services
             }
             throw new Exception();
         }
-
     }
 }
