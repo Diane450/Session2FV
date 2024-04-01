@@ -15,5 +15,10 @@ namespace Session2v2.Models
         {
             return await DBCall.GetPrivateRequestDeniedReasonAsync(Meeting.Id);
         }
+
+        public async override Task DenyRequest(PrivateDeniedRequest privateDeniedRequest)
+        {
+            await DBCall.DenyPrivateRequestAsync(privateDeniedRequest);
+        }
     }
 }

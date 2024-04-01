@@ -155,11 +155,17 @@ namespace Session2v2.ViewModels
             }
         }
 
-        private void BlackListGuestPermissions()
+        private async Task BlackListGuestPermissions()
         {
             SelectedDeniedReason = DeniedReasonsList[0];
             SetDeniedStatus();
-            Message = "Пользователь в черном списке";
+            Message = "Пользователь в черном списке. Заявка отклонена";
+            PrivateDeniedRequest privateDeniedRequest = new PrivateDeniedRequest
+            {
+                PrivateRequestId = SelectedRequest.Meeting.Id,
+                DeniedReasonId = SelectedDeniedReason.Id
+            };
+            await SelectedRequest.DenyRequest(privateDeniedRequest);
         }
 
         private void SetDeniedStatus()

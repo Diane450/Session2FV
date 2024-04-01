@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Session2v2.Models
 {
-    public class DeniedReason
+    public class PrivateDeniedRequest
     {
         public int Id { get; set; }
 
-        public string ShortName { get; set; } = null!;
+        public int PrivateRequestId { get; set; }
+
+        public int DeniedReasonId { get; set; }
     }
 }

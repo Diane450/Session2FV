@@ -39,5 +39,6 @@ namespace Session2v2.Models
         }
 
         public abstract Task<DeniedReason> GetDeniedReason();
+        public abstract Task DenyRequest(PrivateDeniedRequest privateDeniedRequest);
     }
 }

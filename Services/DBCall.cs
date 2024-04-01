@@ -216,5 +216,26 @@ namespace Session2v2.Services
             }
             throw new Exception();
         }
+
+
+        public static async Task DenyPrivateRequestAsync(PrivateDeniedRequest privateDeniedRequest)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(privateDeniedRequest);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/DenyPrivateRequest", serializedContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+        }
+
+        public static async Task DenyGroupRequestAsync()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/DenyGroupRequest");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+        }
     }
 }
