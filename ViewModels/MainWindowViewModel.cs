@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Session2v2.ViewModels
 {
-    public class MainWindowViewModel:ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
         private List<Request> requests = null!;
 
@@ -102,8 +102,10 @@ namespace Session2v2.ViewModels
         {
             try
             {
+                Stopwatch sw = Stopwatch.StartNew();
                 await GetListsContentAsync();
                 SetSelectedValues();
+                sw.Stop();
             }
             catch
             {
@@ -117,8 +119,6 @@ namespace Session2v2.ViewModels
         private void Filter()
         {
             var filteredList = new List<Request>(requests);
-
-            Request r = filteredList.Where(q => q.Meeting.Id == 65).First();
 
             if (SelectedType != TypeList[0] && SelectedType != null)
             {

@@ -21,7 +21,17 @@ namespace Session2v2.ViewModels
         public Status SelectedStatus
         {
             get { return _selectedStatus; }
-            set { _selectedStatus = this.RaiseAndSetIfChanged(ref _selectedStatus, value); }
+            set
+            {
+                _selectedStatus = this.RaiseAndSetIfChanged(ref _selectedStatus, value);
+                if (SelectedStatus.Id == StatusesList[0].Id)
+                    IsRegularPermissionShown = true;
+                else
+                {
+                    IsRegularPermissionShown = false;
+                    SelectedDeniedReason = DeniedReasonsList[1];
+                }
+            }
         }
 
         private DateTime _selectedDate;
@@ -36,7 +46,7 @@ namespace Session2v2.ViewModels
 
         public DateTime DateEnd { get; set; }
 
-        private TimeSpan _selectedTime;
+        private TimeSpan _selectedTime = new TimeSpan(8, 0, 0);
 
         public TimeSpan SelectedTime
         {
@@ -64,7 +74,6 @@ namespace Session2v2.ViewModels
             set { _isRegularPermissionShown = this.RaiseAndSetIfChanged(ref _isRegularPermissionShown, value); }
         }
 
-
         private bool _isChangesEnable = true;
 
         public bool IsChangesEnable
@@ -81,6 +90,13 @@ namespace Session2v2.ViewModels
             set { _message = this.RaiseAndSetIfChanged(ref _message, value); }
         }
 
+        private bool _isSaveChangesEnabled;
+
+        public bool IsSaveChangesEnabled
+        {
+            get { return _isSaveChangesEnabled; }
+            set { _isSaveChangesEnabled = this.RaiseAndSetIfChanged(ref _isSaveChangesEnabled, value); ; }
+        }
 
         private RequestWindowViewModel(Request selectedRequest)
         {
@@ -104,9 +120,16 @@ namespace Session2v2.ViewModels
 
         private async Task GetContent()
         {
-            await GetListData();
+            try
+            {
+                await GetListData();
 
-            await SetPermissions();
+                await SetPermissions();
+            }
+            catch (Exception)
+            {
+                Message = "Ошибка соединения";
+            }
         }
 
         private async Task GetListData()
@@ -119,6 +142,7 @@ namespace Session2v2.ViewModels
 
                 StatusesList = await statusTask;
                 DeniedReasonsList = await reasonTask;
+                StatusesList.RemoveAt(0);
             }
         }
 
@@ -126,15 +150,37 @@ namespace Session2v2.ViewModels
         {
             if (SelectedRequest.Meeting.Status.Id == 3)
                 await DeniedRequestPermissions();
+            else if (SelectedRequest.Meeting.Status.Id == 2)
+                await AcceptedRequestPermissions();
             else if (await SelectedRequest.Guest.IsBlackListed())
-                BlackListGuestPermissions();
+                await BlackListGuestPermissions();
             else
                 SetRegularPermissions();
         }
+
+        private async Task AcceptedRequestPermissions()
+        {
+            if (SelectedRequest.Meeting.DateVisit == null && SelectedRequest.Meeting.Time == null)
+            {
+                var dateTask = SelectedRequest.GetVisitDateAsync();
+                var timeTask = SelectedRequest.GetTimeAsync();
+                await Task.WhenAll(dateTask, timeTask);
+                SelectedRequest.Meeting.DateVisit = await dateTask;
+                SelectedRequest.Meeting.Time = await timeTask;
+            }
+            SelectedStatus = StatusesList.First(s => s.Id == SelectedRequest.Meeting.Status.Id);
+            SelectedTime = TimeSpan.Parse(SelectedRequest.Meeting.Time.ToString());
+            SelectedDate = DateTime.Parse(SelectedRequest.Meeting.DateVisit.ToString());
+            IsRegularPermissionShown = true;
+            IsChangesEnable = false;
+            Message = "Заявка уже одобрена";
+        }
+
         private void SetRegularPermissions()
         {
             SelectedStatus = StatusesList[0];
             IsRegularPermissionShown = true;
+            IsChangesEnable = true;
             SelectedDate = DateTime.Parse(SelectedRequest.Meeting.DateFrom.ToString());
             DateStart = DateTime.Parse(SelectedRequest.Meeting.DateFrom.ToString());
             DateEnd = DateTime.Parse(SelectedRequest.Meeting.DateTo.ToString());
@@ -144,8 +190,9 @@ namespace Session2v2.ViewModels
         {
             try
             {
-                DeniedReason deniedReason = await SelectedRequest.GetDeniedReason();
-                SelectedDeniedReason = DeniedReasonsList.Where(r => r.Id == deniedReason.Id).First();
+                if (SelectedRequest.Meeting.DeniedReason == null)
+                    SelectedRequest.Meeting.DeniedReason = await SelectedRequest.GetDeniedReason();
+                SelectedDeniedReason = DeniedReasonsList.First(r => r.Id == SelectedRequest.Meeting.DeniedReason.Id);
                 SetDeniedStatus();
                 Message = "Заявка уже отклонена";
             }
@@ -158,21 +205,47 @@ namespace Session2v2.ViewModels
         private async Task BlackListGuestPermissions()
         {
             SelectedDeniedReason = DeniedReasonsList[0];
+            SelectedRequest.Meeting.DeniedReason = SelectedDeniedReason;
+            
             SetDeniedStatus();
+
+            await SelectedRequest.DenyRequest();
             Message = "Пользователь в черном списке. Заявка отклонена";
-            PrivateDeniedRequest privateDeniedRequest = new PrivateDeniedRequest
-            {
-                PrivateRequestId = SelectedRequest.Meeting.Id,
-                DeniedReasonId = SelectedDeniedReason.Id
-            };
-            await SelectedRequest.DenyRequest(privateDeniedRequest);
         }
 
         private void SetDeniedStatus()
         {
             IsRegularPermissionShown = false;
             SelectedStatus = StatusesList[2];
+            SelectedRequest.Meeting.Status = SelectedStatus;
             IsChangesEnable = false;
+        }
+        
+        public async Task SaveChanges()
+        {
+
+            try
+            {
+                if (SelectedStatus.Id == StatusesList[0].Id)
+                {
+                    SelectedRequest.Meeting.Status = SelectedStatus;
+                    SelectedRequest.Meeting.Time = new TimeOnly(SelectedTime.Hours, SelectedTime.Minutes);
+                    SelectedRequest.Meeting.DateVisit = new DateOnly(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day);
+                    await SelectedRequest.AcceptRequestAsync();
+                }
+                else
+                {
+                    SelectedRequest.Meeting.Status = SelectedStatus;
+                    SelectedRequest.Meeting.DeniedReason = SelectedDeniedReason;
+                    await SelectedRequest.DenyRequest();
+                }
+                Message = "Изменения сохранены";
+                IsChangesEnable = false;
+            }
+            catch (Exception)
+            {
+                Message = "Ошибка соединения";
+            }
         }
     }
 }

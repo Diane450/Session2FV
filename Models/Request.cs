@@ -17,7 +17,7 @@ namespace Session2v2.Models
 
         public void ConvertAvatarByteToBitmap()
         {
-            if (IsPhotoesEmptyOrNull(Guest.AvatarBytes))
+            if (IsPhotoesEmptyOrNull(Guest.AvatarBytes) && Guest.AvatarBitmap == null)
             {
                 MemoryStream ms = new(Guest.AvatarBytes);
                 Guest.AvatarBitmap = new Bitmap(ms);
@@ -39,6 +39,13 @@ namespace Session2v2.Models
         }
 
         public abstract Task<DeniedReason> GetDeniedReason();
-        public abstract Task DenyRequest(PrivateDeniedRequest privateDeniedRequest);
+
+        public abstract Task<DateOnly> GetVisitDateAsync();
+
+        public abstract Task<TimeOnly> GetTimeAsync();
+
+        public abstract Task DenyRequest();
+
+        public abstract Task AcceptRequestAsync();
     }
 }

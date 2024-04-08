@@ -14,12 +14,39 @@ namespace Session2v2.Models
     {
         public override async Task DenyRequest()
         {
-            await DBCall.DenyGroupRequestAsync();
+            GroupDeniedRequest groupDeniedRequest = new GroupDeniedRequest
+            {
+                GroupRequestId = Meeting.Id,
+                DeniedReasonId = Meeting.DeniedReason.Id
+            };
+            await DBCall.DenyGroupRequestAsync(groupDeniedRequest);
         }
 
         public override async Task<DeniedReason> GetDeniedReason()
         {
             return await DBCall.GetGroupRequestDeniedReasonAsync(Meeting.Id);
+        }
+
+        public override async Task<TimeOnly> GetTimeAsync()
+        {
+            return await DBCall.GetGroupRequestVisitTimeAsync(Meeting.Id);
+        }
+
+        public override async Task<DateOnly> GetVisitDateAsync()
+        {
+            return await DBCall.GetGroupRequestVisitDateAsync(Meeting.Id);
+        }
+
+        public override async Task AcceptRequestAsync()
+        {
+            AcceptedGroupRequest acceptedGroupRequest = new AcceptedGroupRequest
+            {
+                GroupRequestId = Meeting.Id,
+                DateVisit = (DateOnly)Meeting.DateVisit,
+                Time = (TimeOnly)Meeting.Time,
+            };
+            await DBCall.AcceptGroupRequest(acceptedGroupRequest);
+
         }
     }
 }

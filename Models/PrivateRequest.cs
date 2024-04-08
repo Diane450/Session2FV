@@ -16,9 +16,36 @@ namespace Session2v2.Models
             return await DBCall.GetPrivateRequestDeniedReasonAsync(Meeting.Id);
         }
 
-        public async override Task DenyRequest(PrivateDeniedRequest privateDeniedRequest)
+
+        public async override Task DenyRequest()
         {
+            PrivateDeniedRequest privateDeniedRequest = new PrivateDeniedRequest
+            {
+                PrivateRequestId = Meeting.Id,
+                DeniedReasonId = Meeting.DeniedReason.Id
+            };
             await DBCall.DenyPrivateRequestAsync(privateDeniedRequest);
+        }
+
+        public override async Task<DateOnly> GetVisitDateAsync()
+        {
+            return await DBCall.GetPivateRequestVisitDateAsync(Meeting.Id);
+        }
+
+        public override async Task<TimeOnly> GetTimeAsync()
+        {
+            return await DBCall.GetPivateRequestVisitTimeAsync(Meeting.Id);
+        }
+
+        public override async Task AcceptRequestAsync()
+        {
+            AcceptedPrivateRequest acceptedPrivateRequest = new AcceptedPrivateRequest
+            {
+                PrivateRequestId = Meeting.Id,
+                Time = (TimeOnly)Meeting.Time,
+                DateVisit = (DateOnly)Meeting.DateVisit,
+            };
+            await DBCall.AcceptPrivateRequest(acceptedPrivateRequest);
         }
     }
 }

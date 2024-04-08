@@ -4,6 +4,7 @@ using Session2v2.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -47,12 +48,28 @@ namespace Session2v2.Services
         /// <returns></returns>
         public static async Task<List<Request>> GetAllRequestsAsync()
         {
-            List<Request> requests = new();
-            List<GroupRequest> groupRequests = await GetGroupRequestsAsync();
-            List<PrivateRequest> privateRequests = await GetPrivateRequestsAsync();
-            requests.AddRange(groupRequests);
-            requests.AddRange(privateRequests);
-            return requests;
+            try
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                List<Request> requests = new();
+
+                var privateRequestTask = GetPrivateRequestsAsync();
+                var groupRequestTask = GetGroupRequestsAsync();
+                await Task.WhenAll(privateRequestTask, groupRequestTask);
+                List<GroupRequest> groupRequests = await groupRequestTask;
+                List<PrivateRequest> privateRequests = await privateRequestTask;
+                requests.AddRange(groupRequests);
+                requests.AddRange(privateRequests);
+                stopwatch.Stop();
+                return requests;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            
         }
 
         /// <summary>
@@ -217,7 +234,6 @@ namespace Session2v2.Services
             throw new Exception();
         }
 
-
         public static async Task DenyPrivateRequestAsync(PrivateDeniedRequest privateDeniedRequest)
         {
             string dataSerialized = JsonConvert.SerializeObject(privateDeniedRequest);
@@ -229,9 +245,85 @@ namespace Session2v2.Services
             }
         }
 
-        public static async Task DenyGroupRequestAsync()
+        public static async Task DenyGroupRequestAsync(GroupDeniedRequest groupDeniedRequest)
         {
-            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/DenyGroupRequest");
+            string dataSerialized = JsonConvert.SerializeObject(groupDeniedRequest);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/DenyGroupRequest", serializedContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+        }
+
+        public static async Task<DateOnly> GetPivateRequestVisitDateAsync(int Id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(Id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetPivateRequestVisitDate", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<DateOnly>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<DateOnly> GetGroupRequestVisitDateAsync(int Id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(Id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetGroupRequestVisitDate", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<DateOnly>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<TimeOnly> GetPivateRequestVisitTimeAsync(int Id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(Id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetPrivateRequestVisitTime", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<TimeOnly>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<TimeOnly> GetGroupRequestVisitTimeAsync(int Id)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(Id);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetGroupRequestVisitTime", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<TimeOnly>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task AcceptPrivateRequest(AcceptedPrivateRequest acceptedPrivateRequest)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(acceptedPrivateRequest);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/AcceptPrivateRequest", serializedContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+        }
+
+        public static async Task AcceptGroupRequest(AcceptedGroupRequest acceptedGroupRequest)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(acceptedGroupRequest);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/AcceptGroupRequest", serializedContent);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception();

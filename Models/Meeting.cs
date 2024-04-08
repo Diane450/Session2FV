@@ -56,6 +56,14 @@ namespace Session2v2.Models
             }
         }
 
+        private DeniedReason? _deniedReason;
+
+        public DeniedReason? DeniedReason
+        {
+            get { return _deniedReason; }
+            set { _deniedReason = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeniedReason)));}
+        }
+
         public string VisitPurpose { get; set; } = null!;
 
         public Department Department { get; set; } = null!;
