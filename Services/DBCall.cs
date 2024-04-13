@@ -329,5 +329,18 @@ namespace Session2v2.Services
                 throw new Exception();
             }
         }
+
+        public static async Task<Dictionary<string,int>> GetReportData(DateOnly[]range)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(range);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetPrivateRequestsReportDepartment", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<Dictionary<string, int>>(answer);
+            }
+            throw new Exception();
+        }
     }
 }

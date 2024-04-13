@@ -12,65 +12,59 @@
 	<Window.Styles>
 		<StyleInclude Source="/Styles/MainWindowStyles.axaml"/>
 	</Window.Styles>
-		
-		<StackPanel>
-			<Viewbox VerticalAlignment="Top" HorizontalAlignment="Left" MinHeight="400" MinWidth="400" Grid.Row="0">
-				<Grid ColumnDefinitions="2*, *, *">
-					<Image Source="{Binding SelectedRequest.Guest.AvatarBitmap}" Margin="20" Grid.Column="0" MaxHeight="200" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-					<Grid ColumnDefinitions="*, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-						<TextBlock Text="Имя: " Grid.Column="0" Grid.Row="0" />
-						<TextBlock Text="Фамилия: " Grid.Column="0" Grid.Row="1"/>
-						<TextBlock Text="Отчество: " Grid.Column="0" Grid.Row="2"/>
-						<TextBlock Text="Номер телефона: " Grid.Column="0" Grid.Row="3"/>
-						<TextBlock Text="Почта: " Grid.Column="0" Grid.Row="4"/>
-						<TextBlock Text="Примечание: " Grid.Column="0" Grid.Row="5"/>
-						<TextBlock Text="День рождения: " Grid.Column="0" Grid.Row="6"/>
-						<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="7"/>
-						<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="8"/>
+		<StackPanel Orientation="Horizontal">
+			<StackPanel>
+				<Image Margin="20" Height="300" Source="avares://Session2v2/Assets/user-avatar.png" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" IsVisible="{Binding IsAvatarEqualsNull}"/>
+				<Image Source="{Binding SelectedRequest.Guest.AvatarBitmap}" Margin="20" Grid.Column="1" MaxHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+				<Button Content="Посмотреть паспорт" Click="ViewPassport"></Button>
+			</StackPanel>
+			
+			<Grid ColumnDefinitions="*, *, *, *" RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 20 0 0">
+				<TextBlock Text="Имя: " Grid.Column="0" Grid.Row="0" />
+				<TextBlock Text="Фамилия: " Grid.Column="0" Grid.Row="1"/>
+				<TextBlock Text="Отчество: " Grid.Column="0" Grid.Row="2"/>
+				<TextBlock Text="Номер телефона: " Grid.Column="0" Grid.Row="3"/>
+				<TextBlock Text="Почта: " Grid.Column="0" Grid.Row="4"/>
+				<TextBlock Text="Примечание: " Grid.Column="0" Grid.Row="5"/>
+				<TextBlock Text="День рождения: " Grid.Column="0" Grid.Row="6"/>
+				<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="7"/>
+				<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="8"/>
 
-						<TextBlock Text="{Binding SelectedRequest.Guest.Name}" Grid.Column="1" Grid.Row="0" />
-						<TextBlock Text="{Binding SelectedRequest.Guest.LastName}" Grid.Column="1" Grid.Row="1"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.Patronymic}" Grid.Column="1" Grid.Row="2"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.Phone}" Grid.Column="1" Grid.Row="3"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.Email}" Grid.Column="1" Grid.Row="4"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.Note}" Grid.Column="1" Grid.Row="5"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.Birthday}" Grid.Column="1" Grid.Row="6"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.PassportSeries}" Grid.Column="1" Grid.Row="7"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.PassportNumber}" Grid.Column="1" Grid.Row="8"/>
-					</Grid>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Name}" Grid.Column="1" Grid.Row="0" />
+				<TextBlock Text="{Binding SelectedRequest.Guest.LastName}" Grid.Column="1" Grid.Row="1"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Patronymic}" Grid.Column="1" Grid.Row="2"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Phone}" Grid.Column="1" Grid.Row="3"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Email}" Grid.Column="1" Grid.Row="4"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Note}" Grid.Column="1" Grid.Row="5"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Birthday}" Grid.Column="1" Grid.Row="6"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.PassportSeries}" Grid.Column="1" Grid.Row="7"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.PassportNumber}" Grid.Column="1" Grid.Row="8"/>
 
-					<Grid ColumnDefinitions="*, *" RowDefinitions="*, *, *, *, *, *, *, *, *, *, *, *, *" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-						<TextBlock Text="Тип посещения: " Grid.Column="0" Grid.Row="0"/>
-						<TextBlock Text="Организация: " Grid.Column="0" Grid.Row="1"/>
-						<TextBlock Text="Начало действия пропуска: " Grid.Column="0" Grid.Row="2"/>
-						<TextBlock Text="Конец действия пропуска: " Grid.Column="0" Grid.Row="3"/>
-						<TextBlock Text="Отдел: " Grid.Column="0" Grid.Row="4"/>
-						<TextBlock Text="Сотрудник: " Grid.Column="0" Grid.Row="5"/>
-						<TextBlock Text="Цель: " Grid.Column="0" Grid.Row="6"/>
-						<TextBlock Text="Статус: " Grid.Column="0" Grid.Row="7"/>
-						<TextBlock Text="Время: " Grid.Column="0" Grid.Row="8" IsVisible="{Binding IsRegularPermissionShown}"/>
-						<TextBlock Text="Дата: " Grid.Column="0" Grid.Row="9" IsVisible="{Binding IsRegularPermissionShown}"/>
-						<TextBlock Text="Причина отказа заявки: " Grid.Column="0" Grid.Row="8" IsVisible="{Binding !IsRegularPermissionShown}"/>
-						
-						
-						
-						<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType.Name}" Grid.Column="1" Grid.Row="0"/>
-						<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="1" Grid.Row="1"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.DateFrom}" Grid.Column="1" Grid.Row="2"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.DateTo}" Grid.Column="1" Grid.Row="3"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.Department.Name}" Grid.Column="1" Grid.Row="4"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="1" Grid.Row="5"/>
-						<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="1" Grid.Row="6"/>
-						<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="5" Grid.Column="1" Grid.Row="7" IsEnabled="{Binding IsChangesEnable}"></ComboBox>
-						<TimePicker IsVisible="{Binding IsRegularPermissionShown}" Grid.Column="1" Grid.Row="8" SelectedTime="{Binding SelectedTime}" IsEnabled="{Binding IsChangesEnable}"/>
-						<CalendarDatePicker IsVisible="{Binding IsRegularPermissionShown}" Grid.Column="1" Grid.Row="9" SelectedDate="{Binding SelectedDate}" DisplayDateEnd="{Binding DateEnd}" DisplayDateStart="{Binding DateStart}" IsEnabled="{Binding IsChangesEnable}"/>
-						
-						<ComboBox ItemsSource="{Binding DeniedReasonsList}" SelectedItem="{Binding SelectedDeniedReason}" DisplayMemberBinding="{Binding ShortName}" SelectedValueBinding="{Binding Id}" Margin="5" IsVisible="{Binding !IsRegularPermissionShown}" Grid.Column="1" Grid.Row="8" IsEnabled="{Binding IsChangesEnable}"/>
-						<TextBlock Text="{Binding Message}" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Right" Foreground="IndianRed"/>
-						<Button Content="Сохранить изменения" IsEnabled="{Binding IsChangesEnable}" Grid.Row="11" Grid.Column="1" Command="{Binding SaveChanges}"></Button>
-					</Grid>
-				</Grid>
-			</Viewbox>
-			<!--<Image Source="{Binding SelectedRequest.Guest.PassportBitmap}" Margin="20" MaxHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
+				<TextBlock Text="Тип посещения: " Grid.Column="2" Grid.Row="0"/>
+				<TextBlock Text="Организация: " Grid.Column="2" Grid.Row="1"/>
+				<TextBlock Text="Начало действия пропуска: " Grid.Column="2" Grid.Row="2"/>
+				<TextBlock Text="Конец действия пропуска: " Grid.Column="2" Grid.Row="3"/>
+				<TextBlock Text="Отдел: " Grid.Column="2" Grid.Row="4"/>
+				<TextBlock Text="Сотрудник: " Grid.Column="2" Grid.Row="5"/>
+				<TextBlock Text="Цель: " Grid.Column="2" Grid.Row="6"/>
+				<TextBlock Text="Статус: " Grid.Column="2" Grid.Row="7"/>
+				<TextBlock Text="Время: " Grid.Column="2" Grid.Row="8" IsVisible="{Binding IsRegularPermissionShown}"/>
+				<TextBlock Text="Дата: " Grid.Column="2" Grid.Row="9" IsVisible="{Binding IsRegularPermissionShown}"/>
+				<TextBlock Text="Причина отказа заявки: " Grid.Column="2" Grid.Row="8" IsVisible="{Binding !IsRegularPermissionShown}"/>
+
+				<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType.Name}" Grid.Column="3" Grid.Row="0"/>
+				<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="3" Grid.Row="1"/>
+				<TextBlock Text="{Binding SelectedRequest.Meeting.DateFrom}" Grid.Column="3" Grid.Row="2"/>
+				<TextBlock Text="{Binding SelectedRequest.Meeting.DateTo}" Grid.Column="3" Grid.Row="3"/>
+				<TextBlock Text="{Binding SelectedRequest.Meeting.Department.Name}" Grid.Column="3" Grid.Row="4"/>
+				<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="3" Grid.Row="5"/>
+				<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="3" Grid.Row="6"/>
+				<ComboBox ItemsSource="{Binding StatusesList}" SelectedItem="{Binding SelectedStatus}" DisplayMemberBinding="{Binding Name}" SelectedValueBinding="{Binding Id}" Margin="0 0 0 20" MinHeight="54" Grid.Column="3" Grid.Row="7" IsEnabled="{Binding IsChangesEnable}"></ComboBox>
+				<TimePicker IsVisible="{Binding IsRegularPermissionShown}" Grid.Column="3" Grid.Row="8" SelectedTime="{Binding SelectedTime}" IsEnabled="{Binding IsChangesEnable}"/>
+				<CalendarDatePicker IsVisible="{Binding IsRegularPermissionShown}" Grid.Column="3" Grid.Row="9" SelectedDate="{Binding SelectedDate}" DisplayDateEnd="{Binding DateEnd}" DisplayDateStart="{Binding DateStart}" IsEnabled="{Binding IsChangesEnable}"/>
+				<ComboBox ItemsSource="{Binding DeniedReasonsList}" SelectedItem="{Binding SelectedDeniedReason}" DisplayMemberBinding="{Binding ShortName}" SelectedValueBinding="{Binding Id}" Margin="5" MinHeight="54" IsVisible="{Binding !IsRegularPermissionShown}" Grid.Column="3" Grid.Row="8" IsEnabled="{Binding IsChangesEnable}"/>
+				<TextBlock Text="{Binding Message}" Grid.Row="10" Grid.Column="3" HorizontalAlignment="Right" Foreground="IndianRed"/>
+				<Button Content="Сохранить изменения" FontSize="20" Grid.Column="3" Grid.Row="11" Command="{Binding SaveChanges}"/>
+			</Grid>
 		</StackPanel>
 </Window>

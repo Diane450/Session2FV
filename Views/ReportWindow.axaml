@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:Session2v2.ViewModels"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Session2v2.ReportWindow"
+        x:DataType="vm:ReportWindowViewModel"
+		Title="Терминал общего отдела"
+		Icon="/Assets/icon.png"
+		WindowStartupLocation="CenterScreen">
+	<Window.Styles>
+		<StyleInclude Source="/Styles/MainWindowStyles.axaml"/>
+	</Window.Styles>
+	    <StackPanel Orientation="Vertical" Margin="10">
+			<TextBlock Text="Начало периода: "/>
+			<CalendarDatePicker DisplayDateEnd="{Binding Today}" Watermark=" " Height="20" Width="175" SelectedDate="{Binding SelectedDateStart}"/>
+			<TextBlock Text="Конец периода: "/>
+			<CalendarDatePicker DisplayDateEnd="{Binding Today}" Watermark=" " Height="20" Width="175" SelectedDate="{Binding SelectedDateEnd}"/>
+			
+			<StackPanel Orientation="Horizontal" Margin="10">
+				<Button Content="Создать отчет" Command="{Binding CreateReport}"/>
+				<Image Source="/Assets/information.png" Height="20" HorizontalAlignment="Left">
+					<ToolTip.Tip>
+						<TextBlock FontSize="14" Text="При нажатии на кнопку сгенерируется отчет, где будут указаны итоги посещений компании в указанном диапазоне. Файл сохранится на Вашем рабочем столе."/>
+					</ToolTip.Tip>
+				</Image>
+			</StackPanel>
+
+		</StackPanel>
+</Window>

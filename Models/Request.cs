@@ -26,7 +26,7 @@ namespace Session2v2.Models
 
         public void ConvertPassportByteToBitmap()
         {
-            if (IsPhotoesEmptyOrNull(Guest.PassportBytes))
+            if (IsPhotoesEmptyOrNull(Guest.PassportBytes) && Guest.PassportBitmap == null)
             {
                 MemoryStream ms = new(Guest.PassportBytes);
                 Guest.PassportBitmap = new Bitmap(ms);

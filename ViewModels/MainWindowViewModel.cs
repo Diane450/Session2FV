@@ -29,7 +29,18 @@ namespace Session2v2.ViewModels
         public Request SelectedRequest
         {
             get { return _selectedRequest; }
-            set { _selectedRequest = this.RaiseAndSetIfChanged(ref _selectedRequest, value); SelectedRequest?.ConvertAvatarByteToBitmap(); }
+            set
+            {
+                _selectedRequest = this.RaiseAndSetIfChanged(ref _selectedRequest, value);
+                if (SelectedRequest != null && SelectedRequest.Guest.AvatarBytes != null)
+                {
+                    SelectedRequest.ConvertAvatarByteToBitmap();
+                    IsAvatarEqualsNull = false;
+                }
+
+                else
+                    IsAvatarEqualsNull = true;
+            }
         }
 
         private ObservableCollection<Department> _departmantList = null!;
@@ -88,12 +99,40 @@ namespace Session2v2.ViewModels
             set { _errorMessage = this.RaiseAndSetIfChanged(ref _errorMessage, value); }
         }
 
+        private bool _isAvatarEqualsNull;
+
+        public bool IsAvatarEqualsNull
+        {
+            get { return _isAvatarEqualsNull; }
+            set { _isAvatarEqualsNull = this.RaiseAndSetIfChanged(ref _isAvatarEqualsNull, value); }
+        }
+
+        private string? _passportNumber;
+
+        public string? PassportNumber
+        {
+            get { return _passportNumber; }
+            set { _passportNumber = this.RaiseAndSetIfChanged(ref _passportNumber, value); }
+        }
+
+        private bool _isPassportSearchEnable;
+
+        public bool IsPassportSearchEnable
+        {
+            get { return _isPassportSearchEnable; }
+            set { _isPassportSearchEnable = this.RaiseAndSetIfChanged(ref _isPassportSearchEnable, value); }
+        }
 
         public MainWindowViewModel()
         {
             GetContentAsync();
+            this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
         }
 
+        private void PassportSearchEnable()
+        {
+            IsPassportSearchEnable = PassportNumber?.Length == 6;
+        }
         /// <summary>
         /// Возвращает содержимое для списков заявок, отделений, типов заявок и статусов
         /// </summary>
@@ -146,6 +185,22 @@ namespace Session2v2.ViewModels
             {
                 ErrorMessage = "Нет заявок по выбранным категориям";
             }
+        }
+        public void FindByPassportNumber()
+        {
+            if (PassportNumber != null)
+            {
+                Request? request = FilteredRequests.FirstOrDefault(r => r.Guest.PassportNumber == PassportNumber);
+                if (request == null)
+                    ErrorMessage = "Гостей с таким номером паспорта не найдено";
+                else
+                    SelectedRequest = request;
+            }
+            else
+            {
+                Filter();
+            }
+
         }
         private async Task GetListsContentAsync()
         {

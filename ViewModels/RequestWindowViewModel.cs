@@ -98,6 +98,9 @@ namespace Session2v2.ViewModels
             set { _isSaveChangesEnabled = this.RaiseAndSetIfChanged(ref _isSaveChangesEnabled, value); ; }
         }
 
+        public bool IsAvatarEqualsNull { get; set; }
+
+
         private RequestWindowViewModel(Request selectedRequest)
         {
             SelectedRequest = selectedRequest;
@@ -117,7 +120,6 @@ namespace Session2v2.ViewModels
             }
         }
 
-
         private async Task GetContent()
         {
             try
@@ -125,6 +127,9 @@ namespace Session2v2.ViewModels
                 await GetListData();
 
                 await SetPermissions();
+
+                if(SelectedRequest.Guest.AvatarBitmap==null)
+                    IsAvatarEqualsNull = true;
             }
             catch (Exception)
             {

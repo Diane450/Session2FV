@@ -20,5 +20,11 @@ namespace Session2v2.Views
             var window = await RequestWindow.CreateAsync(selectedRequest);
             window.ShowDialog(this);
         }
+
+        private void OpenReportWindow(object sender, RoutedEventArgs e)
+        {
+            var window = new ReportWindow();
+            window.ShowDialog(this);
+        }
     }
 }
