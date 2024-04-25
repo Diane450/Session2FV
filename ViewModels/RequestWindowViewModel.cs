@@ -34,12 +34,16 @@ namespace Session2v2.ViewModels
             }
         }
 
-        private DateTime _selectedDate;
+        private DateTime? _selectedDate;
 
-        public DateTime SelectedDate
+        public DateTime? SelectedDate
         {
             get { return _selectedDate; }
-            set { _selectedDate = this.RaiseAndSetIfChanged(ref _selectedDate, value); }
+            set
+            {
+                if (value != null && DateTime.TryParse(value.ToString(), out DateTime date))
+                    _selectedDate = this.RaiseAndSetIfChanged(ref _selectedDate, value);
+            }
         }
 
         public DateTime DateStart { get; set; }
@@ -235,7 +239,8 @@ namespace Session2v2.ViewModels
                 {
                     SelectedRequest.Meeting.Status = SelectedStatus;
                     SelectedRequest.Meeting.Time = new TimeOnly(SelectedTime.Hours, SelectedTime.Minutes);
-                    SelectedRequest.Meeting.DateVisit = new DateOnly(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day);
+                    DateTime date = (DateTime)SelectedDate;
+                    SelectedRequest.Meeting.DateVisit = new DateOnly(date.Year, date.Month, date.Day);
                     await SelectedRequest.AcceptRequestAsync();
                 }
                 else

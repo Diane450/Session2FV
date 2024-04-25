@@ -2,6 +2,7 @@
 using ReactiveUI;
 using Session2v2.Models;
 using Session2v2.Services;
+using Session2v2.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -91,12 +92,12 @@ namespace Session2v2.ViewModels
             set { _selectedType = this.RaiseAndSetIfChanged(ref _selectedType, value); Filter(); }
         }
 
-        private string _errorMessage = null!;
+        private string _message = null!;
 
-        public string ErrorMessage
+        public string Message
         {
-            get { return _errorMessage; }
-            set { _errorMessage = this.RaiseAndSetIfChanged(ref _errorMessage, value); }
+            get { return _message; }
+            set { _message = this.RaiseAndSetIfChanged(ref _message, value); }
         }
 
         private bool _isAvatarEqualsNull;
@@ -123,6 +124,39 @@ namespace Session2v2.ViewModels
             set { _isPassportSearchEnable = this.RaiseAndSetIfChanged(ref _isPassportSearchEnable, value); }
         }
 
+
+        private bool _isDataLoading = true;
+
+        public bool IsDataLoading
+        {
+            get { return _isDataLoading; }
+            set { _isDataLoading = this.RaiseAndSetIfChanged(ref _isDataLoading, value); }
+        }
+
+        private bool _isDataLoaded = false;
+
+        public bool IsDataLoaded
+        {
+            get { return _isDataLoaded; }
+            set { _isDataLoaded = this.RaiseAndSetIfChanged(ref _isDataLoaded, value); }
+        }
+
+        private string _guestNotFoundMessage;
+
+        public string GuestNotFoundMessage
+        {
+            get { return _guestNotFoundMessage; }
+            set { _guestNotFoundMessage = this.RaiseAndSetIfChanged(ref _guestNotFoundMessage, value); }
+        }
+
+        private bool _isFilteredListNotNull = true;
+
+        public bool IsFilteredListNotNull
+        {
+            get { return _isFilteredListNotNull; }
+            set { _isFilteredListNotNull = this.RaiseAndSetIfChanged(ref _isFilteredListNotNull, value); }
+        }
+
         public MainWindowViewModel()
         {
             GetContentAsync();
@@ -133,6 +167,7 @@ namespace Session2v2.ViewModels
         {
             IsPassportSearchEnable = PassportNumber?.Length == 6;
         }
+
         /// <summary>
         /// Возвращает содержимое для списков заявок, отделений, типов заявок и статусов
         /// </summary>
@@ -141,14 +176,16 @@ namespace Session2v2.ViewModels
         {
             try
             {
-                Stopwatch sw = Stopwatch.StartNew();
                 await GetListsContentAsync();
                 SetSelectedValues();
-                sw.Stop();
+                IsDataLoading = false;
+                IsDataLoaded = true;
             }
             catch
             {
-                ErrorMessage = "Ошибка соединения";
+                IsDataLoading = false;
+                IsDataLoaded = false;
+                Message = "Ошибка соединения";
             }
         }
 
@@ -164,44 +201,49 @@ namespace Session2v2.ViewModels
                 filteredList = filteredList.Where(r => r.Meeting.MeetingType.Id == SelectedType.Id).ToList();
             }
 
-            if (SelectedDepartment != null)
+            if (SelectedDepartment != null && SelectedDepartment != DepartmentList[0])
             {
                 filteredList = filteredList.Where(r => r.Meeting.Department.Id == SelectedDepartment.Id).ToList();
             }
 
-            if (SelectedStatus != null)
+            if (SelectedStatus != null && SelectedStatus != StatusesList[0])
             {
                 filteredList = filteredList.Where(r => r.Meeting.Status.Id == SelectedStatus.Id).ToList();
             }
 
             FilteredRequests.Clear();
             FilteredRequests.AddRange(filteredList);
+            
             if (FilteredRequests.Count != 0)
             {
-                ErrorMessage = "";
+                Message = "";
+                IsFilteredListNotNull = true;
                 SelectedRequest = FilteredRequests[0];
             }
             else
             {
-                ErrorMessage = "Нет заявок по выбранным категориям";
+                IsFilteredListNotNull = false;
+                Message = "Нет заявок по выбранным категориям";
             }
         }
-        public void FindByPassportNumber()
+        public void FindByPassportNumber()//TODO: вот с этой залупой разобраться раз на раз 
         {
+            SelectedDepartment = DepartmentList[0];
+            SelectedStatus = StatusesList[0];
+            SelectedType = TypeList[0];
+
             if (PassportNumber != null)
             {
                 Request? request = FilteredRequests.FirstOrDefault(r => r.Guest.PassportNumber == PassportNumber);
                 if (request == null)
-                    ErrorMessage = "Гостей с таким номером паспорта не найдено";
+                {
+                    Message = "Не найдено";
+                }
                 else
                     SelectedRequest = request;
             }
-            else
-            {
-                Filter();
-            }
-
         }
+        
         private async Task GetListsContentAsync()
         {
             var requestsTask = DBCall.GetAllRequestsAsync();
@@ -213,10 +255,29 @@ namespace Session2v2.ViewModels
 
             requests = await requestsTask;
             FilteredRequests = new ObservableCollection<Request>(requests);
-            DepartmentList = await departmentTask;
-            StatusesList = await statusTask;
+
+            DepartmentList = new ObservableCollection<Department>()
+            {
+                new Department()
+                {
+                    Id = 0,
+                    Name = "Все"
+                },
+                await departmentTask
+            };
+
+            StatusesList = new ObservableCollection<Status>()
+            {
+                new Status()
+                {
+                    Id = 0,
+                    Name = "Все"
+                },
+                await statusTask
+            };
             TypeList = await typeTask;
         }
+        
         private void SetSelectedValues()
         {
             SelectedRequest = FilteredRequests[0];

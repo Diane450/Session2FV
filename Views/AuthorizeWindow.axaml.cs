@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Session2v2.Models;
 using Session2v2.Services;
 using System;
 
@@ -22,8 +23,10 @@ public partial class AuthorizeWindow : Window
         try
         {
             TextBox textBox = this.Find<TextBox>("Code")!;
-            if (await DBCall.AuthorizeAsync(textBox.Text!))
+            string name = await DBCall.AuthorizeAsync(textBox.Text!);
+            if (name != null)
             {
+                CurrentUser.FullName = name;
                 var window = new MainWindow();
                 window.Show();
                 Close();
@@ -35,7 +38,7 @@ public partial class AuthorizeWindow : Window
                 ErrorLabel.Content = "Неправильный код";
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Label ErrorLabel = this.Find<Label>("ErrorLabel");
             ErrorLabel.IsVisible = true;

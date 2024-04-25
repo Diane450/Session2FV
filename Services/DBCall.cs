@@ -29,7 +29,7 @@ namespace Session2v2.Services
         /// <param name="code"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task<bool> AuthorizeAsync(string code)
+        public static async Task<string> AuthorizeAsync(string code)
         {
             string dataSerialized = JsonConvert.SerializeObject(code);
             StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
@@ -37,7 +37,7 @@ namespace Session2v2.Services
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<bool>(answer);
+                return answer;
             }
             throw new Exception();
         }
@@ -50,7 +50,6 @@ namespace Session2v2.Services
         {
             try
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
                 List<Request> requests = new();
 
                 var privateRequestTask = GetPrivateRequestsAsync();
@@ -60,7 +59,6 @@ namespace Session2v2.Services
                 List<PrivateRequest> privateRequests = await privateRequestTask;
                 requests.AddRange(groupRequests);
                 requests.AddRange(privateRequests);
-                stopwatch.Stop();
                 return requests;
             }
             catch (Exception ex)
@@ -330,11 +328,63 @@ namespace Session2v2.Services
             }
         }
 
-        public static async Task<Dictionary<string,int>> GetReportData(DateOnly[]range)
+        public static async Task<int> GetAcceptedAmountRequestAsync(DateOnly[]range)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(range);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetAcceptedAmountRequest", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<int>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<int> GetTotalAmountRequestsAsync(DateOnly[] range)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(range);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetAllRequestsAmount", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<int>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<int> GetDeniedRequestsAsync(DateOnly[] range)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(range);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetDeniedAmountRequest", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<int>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<Dictionary<string, int>> GetPrivateRequestsDepartmentAsync(DateOnly[] range)
         {
             string dataSerialized = JsonConvert.SerializeObject(range);
             StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetPrivateRequestsReportDepartment", serializedContent);
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<Dictionary<string, int>>(answer);
+            }
+            throw new Exception();
+        }
+
+        public static async Task<Dictionary<string,int>> GetGroupRequestsDepartmentAsync(DateOnly[] range)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(range);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/GetGroupRequestsReportDepartment", serializedContent);
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;

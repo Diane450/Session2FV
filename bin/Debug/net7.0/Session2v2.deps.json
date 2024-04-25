@@ -15,8 +15,10 @@
           "Avalonia.ReactiveUI": "11.0.10",
           "Avalonia.Themes.Fluent": "11.0.10",
           "Citrus.Avalonia": "2.1.1",
-          "Material.Avalonia": "3.5.0",
+          "Deadpikle.AvaloniaProgressRing": "0.10.6",
+          "Material.Avalonia": "3.0.0",
           "Newtonsoft.Json": "13.0.3",
+          "System.Drawing.Common": "8.0.4",
           "iTextSharp": "5.5.13.3"
         },
         "runtime": {
@@ -193,7 +195,7 @@
         "dependencies": {
           "Avalonia": "11.0.10",
           "ReactiveUI": "18.3.1",
-          "System.Reactive": "5.0.0"
+          "System.Reactive": "6.0.0"
         },
         "runtime": {
           "lib/net6.0/Avalonia.ReactiveUI.dll": {
@@ -295,9 +297,20 @@
           }
         }
       },
+      "Deadpikle.AvaloniaProgressRing/0.10.6": {
+        "dependencies": {
+          "Avalonia": "11.0.10"
+        },
+        "runtime": {
+          "lib/net7.0/AvaloniaProgressRing.dll": {
+            "assemblyVersion": "0.10.6.0",
+            "fileVersion": "0.10.6.0"
+          }
+        }
+      },
       "DynamicData/7.9.5": {
         "dependencies": {
-          "System.Reactive": "5.0.0"
+          "System.Reactive": "6.0.0"
         },
         "runtime": {
           "lib/net6.0/DynamicData.dll": {
@@ -385,26 +398,27 @@
           }
         }
       },
-      "Material.Avalonia/3.5.0": {
+      "Material.Avalonia/3.0.0": {
         "dependencies": {
-          "Avalonia": "11.0.10"
+          "Avalonia": "11.0.10",
+          "System.Reactive": "6.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/Material.Avalonia.dll": {
-            "assemblyVersion": "3.5.0.0",
-            "fileVersion": "3.5.0.0"
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
           },
           "lib/netstandard2.0/Material.Colors.dll": {
-            "assemblyVersion": "3.5.0.0",
-            "fileVersion": "3.5.0.0"
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
           },
           "lib/netstandard2.0/Material.Ripple.dll": {
-            "assemblyVersion": "3.5.0.0",
-            "fileVersion": "3.5.0.0"
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
           },
           "lib/netstandard2.0/Material.Styles.dll": {
-            "assemblyVersion": "3.5.0.0",
-            "fileVersion": "3.5.0.0"
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
           }
         }
       },
@@ -656,6 +670,22 @@
       },
       "Microsoft.NETCore.Platforms/2.1.2": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "Microsoft.Win32.SystemEvents/8.0.0": {
+        "runtime": {
+          "lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.3": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
@@ -768,6 +798,17 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Drawing.Common/8.0.4": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "8.0.0"
+        },
+        "runtime": {
+          "lib/net7.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.424.16911"
+          }
+        }
+      },
       "System.Dynamic.Runtime/4.3.0": {
         "dependencies": {
           "System.Collections": "4.3.0",
@@ -851,11 +892,11 @@
           "System.Threading": "4.3.0"
         }
       },
-      "System.Reactive/5.0.0": {
+      "System.Reactive/6.0.0": {
         "runtime": {
-          "lib/net5.0/System.Reactive.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.0.1"
+          "lib/net6.0/System.Reactive.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.1"
           }
         }
       },
@@ -1133,6 +1174,13 @@
       "path": "citrus.avalonia/2.1.1",
       "hashPath": "citrus.avalonia.2.1.1.nupkg.sha512"
     },
+    "Deadpikle.AvaloniaProgressRing/0.10.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BXgGgRCzjyqdyBaC0vUGNbB5lI0RmD/I1f5mIclLuphikoljOEpNr0oeatqYll8CxOIK/bmu/nAgICoMjagdPw==",
+      "path": "deadpikle.avaloniaprogressring/0.10.6",
+      "hashPath": "deadpikle.avaloniaprogressring.0.10.6.nupkg.sha512"
+    },
     "DynamicData/7.9.5": {
       "type": "package",
       "serviceable": true,
@@ -1182,12 +1230,12 @@
       "path": "itextsharp/5.5.13.3",
       "hashPath": "itextsharp.5.5.13.3.nupkg.sha512"
     },
-    "Material.Avalonia/3.5.0": {
+    "Material.Avalonia/3.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CZEUp4KeYyLMOp4trZEEk8hg2m5YUteabHVsyvVOqZTa/nFI3PfC/sQghskGAAPSjKShqWgIuaRweKiTrO9ILQ==",
-      "path": "material.avalonia/3.5.0",
-      "hashPath": "material.avalonia.3.5.0.nupkg.sha512"
+      "sha512": "sha512-RngI8JO+6ljI8eyhe32J416Wh6LL1CMLjJ1S560lyfkmcIZJBueLlkiReroEptQvg1nBK1uE2zFR0413WfDWnA==",
+      "path": "material.avalonia/3.0.0",
+      "hashPath": "material.avalonia.3.0.0.nupkg.sha512"
     },
     "MicroCom.Runtime/0.11.0": {
       "type": "package",
@@ -1251,6 +1299,13 @@
       "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
+    },
+    "Microsoft.Win32.SystemEvents/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9opKRyOKMCi2xJ7Bj7kxtZ1r9vbzosMvRrdEhVhDz8j8MoBGgB+WmC94yH839NPH+BclAjtQ/pyagvi/8gDLkw==",
+      "path": "microsoft.win32.systemevents/8.0.0",
+      "hashPath": "microsoft.win32.systemevents.8.0.0.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.3": {
       "type": "package",
@@ -1336,6 +1391,13 @@
       "path": "system.diagnostics.debug/4.3.0",
       "hashPath": "system.diagnostics.debug.4.3.0.nupkg.sha512"
     },
+    "System.Drawing.Common/8.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3G4xpa8mUYGzEF0HlswlBArAFywHJIzsZoB5hU4yMlnYHaabj/lg019BwbyyYBxj0aoM7Cz+jdlgUemeno9LOQ==",
+      "path": "system.drawing.common/8.0.4",
+      "hashPath": "system.drawing.common.8.0.4.nupkg.sha512"
+    },
     "System.Dynamic.Runtime/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -1399,12 +1461,12 @@
       "path": "system.objectmodel/4.3.0",
       "hashPath": "system.objectmodel.4.3.0.nupkg.sha512"
     },
-    "System.Reactive/5.0.0": {
+    "System.Reactive/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-erBZjkQHWL9jpasCE/0qKAryzVBJFxGHVBAvgRN1bzM0q2s1S4oYREEEL0Vb+1kA/6BKb5FjUZMp5VXmy+gzkQ==",
-      "path": "system.reactive/5.0.0",
-      "hashPath": "system.reactive.5.0.0.nupkg.sha512"
+      "sha512": "sha512-31kfaW4ZupZzPsI5PVe77VhnvFF55qgma7KZr/E0iFTs6fmdhhG8j0mgEx620iLTey1EynOkEfnyTjtNEpJzGw==",
+      "path": "system.reactive/6.0.0",
+      "hashPath": "system.reactive.6.0.0.nupkg.sha512"
     },
     "System.Reflection/4.3.0": {
       "type": "package",

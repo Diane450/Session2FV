@@ -26,6 +26,6 @@
 					</ToolTip.Tip>
 				</Image>
 			</StackPanel>
-
+			<TextBlock Text="{Binding Message}" Foreground="IndianRed"/>
 		</StackPanel>
 </Window>
