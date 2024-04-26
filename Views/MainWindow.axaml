@@ -8,15 +8,21 @@
 		x:DataType="vm:MainWindowViewModel"
         Title="Терминал общего отдела"
 		Icon="/Assets/icon.png"
-		WindowStartupLocation="CenterScreen"
-		xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing">
-	    <Window.Styles>
+		WindowStartupLocation="CenterScreen">
+	    
+	<Window.Styles>
 		    <StyleInclude Source="/Styles/MainWindowStyles.axaml"/>
 	    </Window.Styles>
 	
 	<StackPanel >
-		<TextBlock Text="{Binding LoadingText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		<StackPanel Orientation="Horizontal" Background="#089C27B0" Height="100" IsVisible="{Binding IsDataLoaded}">
+		<TextBlock Text="{Binding LoadingText}" VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding IsDataLoading}"/>
+		
+		<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding !IsDataLoadedSuccess}">
+			<TextBlock Text="Ошибка соединения" Foreground="IndianRed"/>
+			<Button VerticalAlignment="Center" HorizontalAlignment="Center" Content="Перезагрузить" Command="{Binding CreateAsync}"/>
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" Height="100" IsVisible="{Binding IsDataLoaded}">
 				<StackPanel Orientation="Vertical">
 					<TextBlock Text="Отдел:" Margin="10 10 10 0" FontSize="16"/>
 					<ComboBox ItemsSource="{Binding DepartmentList}" VerticalAlignment="Center" Padding="0" Width="225" Height="40" SelectedItem="{Binding SelectedDepartment}" SelectedValueBinding="{Binding Id}" Margin="10" ToolTip.Tip="Фильтрация по подразделению">

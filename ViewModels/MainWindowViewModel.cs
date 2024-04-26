@@ -150,7 +150,7 @@ namespace Session2v2.ViewModels
         }
 
 
-        private string _loadingText = "Загрузка";
+        private string _loadingText;
 
         public string LoadingText
         {
@@ -158,16 +158,37 @@ namespace Session2v2.ViewModels
             set { _loadingText = this.RaiseAndSetIfChanged(ref _loadingText, value); }
         }
 
+        private bool _isDataLoadedSuccess;
+
+        public bool IsDataLoadedSuccess
+        {
+            get { return _isDataLoadedSuccess; }
+            set { _isDataLoadedSuccess = this.RaiseAndSetIfChanged(ref _isDataLoadedSuccess, value); }
+        }
+
+        private bool _isDataLoading;
+
+        public bool IsDataLoading
+        {
+            get { return _isDataLoading; }
+            set { _isDataLoading = this.RaiseAndSetIfChanged(ref _isDataLoading, value); }
+        }
+
 
         public MainWindowViewModel()
         {
-            GetContentAsync();
             this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
-            LoadText();
+            CreateAsync();
         }
 
+        public async Task CreateAsync()
+        {
+            GetContentAsync();
+            LoadText();
+        }
         private async Task LoadText()
         {
+            LoadingText = "Загрузка";
             int count = 0;
             while (!IsDataLoaded)
             {
@@ -181,6 +202,7 @@ namespace Session2v2.ViewModels
                 }
             }
         }
+        
         private void PassportSearchEnable()
         {
             IsPassportSearchEnable = PassportNumber?.Length == 6;
@@ -194,15 +216,19 @@ namespace Session2v2.ViewModels
         {
             try
             {
+                IsDataLoadedSuccess = true;
+                IsDataLoading = true;
                 await GetListsContentAsync();
                 SetSelectedValues();
                 IsDataLoaded = true;
+                IsDataLoading = false;
                 IsFilteredListNotNull = true;
             }
             catch
             {
+                IsDataLoading = false;
                 IsDataLoaded = false;
-                Message = "Ошибка соединения";
+                IsDataLoadedSuccess = false;
             }
         }
 
@@ -243,6 +269,7 @@ namespace Session2v2.ViewModels
                 Message = "Нет заявок по выбранным категориям";
             }
         }
+        
         public void FindByPassportNumber()//TODO: вот с этой залупой разобраться раз на раз 
         {
             SelectedDepartment = DepartmentList[0];
