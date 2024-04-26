@@ -135,7 +135,7 @@ namespace Session2v2.ViewModels
                 if(SelectedRequest.Guest.AvatarBitmap==null)
                     IsAvatarEqualsNull = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Message = "Ошибка соединения";
             }
@@ -225,7 +225,7 @@ namespace Session2v2.ViewModels
         private void SetDeniedStatus()
         {
             IsRegularPermissionShown = false;
-            SelectedStatus = StatusesList[2];
+            SelectedStatus = StatusesList[1];
             SelectedRequest.Meeting.Status = SelectedStatus;
             IsChangesEnable = false;
         }

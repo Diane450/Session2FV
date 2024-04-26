@@ -14,9 +14,9 @@
 		    <StyleInclude Source="/Styles/MainWindowStyles.axaml"/>
 	    </Window.Styles>
 	
-	<StackPanel IsVisible="{Binding IsDataLoaded}">
-		
-		<StackPanel Orientation="Horizontal" Background="#089C27B0"  Height="100">
+	<StackPanel >
+		<TextBlock Text="{Binding LoadingText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<StackPanel Orientation="Horizontal" Background="#089C27B0" Height="100" IsVisible="{Binding IsDataLoaded}">
 				<StackPanel Orientation="Vertical">
 					<TextBlock Text="Отдел:" Margin="10 10 10 0" FontSize="16"/>
 					<ComboBox ItemsSource="{Binding DepartmentList}" VerticalAlignment="Center" Padding="0" Width="225" Height="40" SelectedItem="{Binding SelectedDepartment}" SelectedValueBinding="{Binding Id}" Margin="10" ToolTip.Tip="Фильтрация по подразделению">
@@ -112,7 +112,7 @@
 						<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="3" Grid.Row="5"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="3" Grid.Row="6"/>
 						<TextBlock Text="{Binding SelectedRequest.Meeting.Status.Name}"  Grid.Column="3" Grid.Row="7"/>
-						<Button Content="Изменить" FontSize="20" Grid.Column="3" Grid.Row="8" Click="Change" Margin="0 0 20 0" ToolTip.Tip="Изменить статус заявки"/>
+						<Button Content="Изменить" FontSize="20" Grid.Column="3" Grid.Row="8" Click="Change" Margin="10 0 20 0" ToolTip.Tip="Изменить статус заявки"/>
 					</Grid>
 				</Grid>
 	</StackPanel>

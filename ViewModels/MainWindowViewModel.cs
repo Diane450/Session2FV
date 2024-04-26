@@ -125,13 +125,13 @@ namespace Session2v2.ViewModels
         }
 
 
-        private bool _isDataLoading = true;
+        //private bool _isDataLoading = true;
 
-        public bool IsDataLoading
-        {
-            get { return _isDataLoading; }
-            set { _isDataLoading = this.RaiseAndSetIfChanged(ref _isDataLoading, value); }
-        }
+        //public bool IsDataLoading
+        //{
+        //    get { return _isDataLoading; }
+        //    set { _isDataLoading = this.RaiseAndSetIfChanged(ref _isDataLoading, value); }
+        //}
 
         private bool _isDataLoaded = false;
 
@@ -141,15 +141,7 @@ namespace Session2v2.ViewModels
             set { _isDataLoaded = this.RaiseAndSetIfChanged(ref _isDataLoaded, value); }
         }
 
-        private string _guestNotFoundMessage;
-
-        public string GuestNotFoundMessage
-        {
-            get { return _guestNotFoundMessage; }
-            set { _guestNotFoundMessage = this.RaiseAndSetIfChanged(ref _guestNotFoundMessage, value); }
-        }
-
-        private bool _isFilteredListNotNull = true;
+        private bool _isFilteredListNotNull = false;
 
         public bool IsFilteredListNotNull
         {
@@ -157,12 +149,38 @@ namespace Session2v2.ViewModels
             set { _isFilteredListNotNull = this.RaiseAndSetIfChanged(ref _isFilteredListNotNull, value); }
         }
 
+
+        private string _loadingText = "Загрузка";
+
+        public string LoadingText
+        {
+            get { return _loadingText; }
+            set { _loadingText = this.RaiseAndSetIfChanged(ref _loadingText, value); }
+        }
+
+
         public MainWindowViewModel()
         {
             GetContentAsync();
             this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
+            LoadText();
         }
 
+        private async Task LoadText()
+        {
+            int count = 0;
+            while (!IsDataLoaded)
+            {
+                LoadingText += '.';
+                await Task.Delay(1000);
+                count++;
+                if (count == 3)
+                {
+                    LoadingText = LoadingText.Remove(8, 3);
+                    count = 0;
+                }
+            }
+        }
         private void PassportSearchEnable()
         {
             IsPassportSearchEnable = PassportNumber?.Length == 6;
@@ -178,12 +196,11 @@ namespace Session2v2.ViewModels
             {
                 await GetListsContentAsync();
                 SetSelectedValues();
-                IsDataLoading = false;
                 IsDataLoaded = true;
+                IsFilteredListNotNull = true;
             }
             catch
             {
-                IsDataLoading = false;
                 IsDataLoaded = false;
                 Message = "Ошибка соединения";
             }
@@ -213,7 +230,7 @@ namespace Session2v2.ViewModels
 
             FilteredRequests.Clear();
             FilteredRequests.AddRange(filteredList);
-            
+
             if (FilteredRequests.Count != 0)
             {
                 Message = "";
@@ -243,7 +260,7 @@ namespace Session2v2.ViewModels
                     SelectedRequest = request;
             }
         }
-        
+
         private async Task GetListsContentAsync()
         {
             var requestsTask = DBCall.GetAllRequestsAsync();
@@ -277,7 +294,7 @@ namespace Session2v2.ViewModels
             };
             TypeList = await typeTask;
         }
-        
+
         private void SetSelectedValues()
         {
             SelectedRequest = FilteredRequests[0];
