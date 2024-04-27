@@ -15,7 +15,9 @@
   <ItemGroup>
     <None Remove="Assets\icon.png" />
     <None Remove="Assets\information.png" />
+    <None Remove="Assets\moon.png" />
     <None Remove="Assets\report-logo.png" />
+    <None Remove="Assets\sun.png" />
     <None Remove="Assets\user-avatar.png" />
   </ItemGroup>
 

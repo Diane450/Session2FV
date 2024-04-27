@@ -1,4 +1,7 @@
-﻿using DynamicData;
+﻿using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Styling;
+using DynamicData;
 using ReactiveUI;
 using Session2v2.Models;
 using Session2v2.Services;
@@ -7,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -174,10 +178,22 @@ namespace Session2v2.ViewModels
             set { _isDataLoading = this.RaiseAndSetIfChanged(ref _isDataLoading, value); }
         }
 
+        private Bitmap _changeThemeButtonIcon;
+
+        public Bitmap ChangeThemeButtonIcon
+        {
+            get { return _changeThemeButtonIcon; }
+            set { _changeThemeButtonIcon = this.RaiseAndSetIfChanged(ref _changeThemeButtonIcon, value); }
+        }
 
         public MainWindowViewModel()
         {
             this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
+            
+            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string filePath = Path.Combine(projectPath, "Assets", "moon.png");
+            ChangeThemeButtonIcon = new Bitmap(filePath);
+            
             CreateAsync();
         }
 
@@ -232,9 +248,23 @@ namespace Session2v2.ViewModels
             }
         }
 
-        /// <summary>
-        /// Фильтрует список заявок по отделу, типу и статусу
-        /// </summary>
+        public void ChangeTheme()
+        {
+            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string moonfilePath = Path.Combine(projectPath, "Assets", "sun.png");
+
+            string sunPath = Path.Combine(projectPath, "Assets", "moon.png");
+            if (Application.Current.RequestedThemeVariant == ThemeVariant.Light)
+            {
+                Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
+                ChangeThemeButtonIcon = new Bitmap(moonfilePath);
+            }
+            else
+            {
+                Application.Current.RequestedThemeVariant = ThemeVariant.Light;
+                ChangeThemeButtonIcon = new Bitmap(sunPath);
+            }
+        }
         private void Filter()
         {
             var filteredList = new List<Request>(requests);
@@ -270,7 +300,7 @@ namespace Session2v2.ViewModels
             }
         }
         
-        public void FindByPassportNumber()//TODO: вот с этой залупой разобраться раз на раз 
+        public void FindByPassportNumber() 
         {
             SelectedDepartment = DepartmentList[0];
             SelectedStatus = StatusesList[0];

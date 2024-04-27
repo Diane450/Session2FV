@@ -128,16 +128,17 @@ namespace Session2v2.ViewModels
         {
             try
             {
+                if (SelectedRequest.Guest.AvatarBitmap == null)
+                    IsAvatarEqualsNull = true;
+
                 await GetListData();
 
                 await SetPermissions();
-
-                if(SelectedRequest.Guest.AvatarBitmap==null)
-                    IsAvatarEqualsNull = true;
             }
             catch (Exception ex)
             {
                 Message = "Ошибка соединения";
+                IsChangesEnable = false;
             }
         }
 
@@ -239,8 +240,7 @@ namespace Session2v2.ViewModels
                 {
                     SelectedRequest.Meeting.Status = SelectedStatus;
                     SelectedRequest.Meeting.Time = new TimeOnly(SelectedTime.Hours, SelectedTime.Minutes);
-                    DateTime date = (DateTime)SelectedDate;
-                    SelectedRequest.Meeting.DateVisit = new DateOnly(date.Year, date.Month, date.Day);
+                    SelectedRequest.Meeting.DateVisit = DateOnly.FromDateTime((DateTime)SelectedDate);
                     await SelectedRequest.AcceptRequestAsync();
                 }
                 else
