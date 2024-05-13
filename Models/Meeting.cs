@@ -8,7 +8,7 @@ using Tmds.DBus.SourceGenerator;
 
 namespace Session2v2.Models
 {
-    public class Meeting: INotifyPropertyChanged
+    public class Meeting : INotifyPropertyChanged
     {
         public int Id { get; set; }
         public DateOnly DateTo { get; set; }
@@ -61,7 +61,7 @@ namespace Session2v2.Models
         public DeniedReason? DeniedReason
         {
             get { return _deniedReason; }
-            set { _deniedReason = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeniedReason)));}
+            set { _deniedReason = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeniedReason))); }
         }
 
         public string VisitPurpose { get; set; } = null!;

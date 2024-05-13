@@ -13,11 +13,6 @@ public partial class AuthorizeWindow : Window
         InitializeComponent();
     }
 
-    /// <summary>
-    /// Авторизация сотрудника
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private async void Authorize(object sender, RoutedEventArgs e)
     {
         try
@@ -33,14 +28,14 @@ public partial class AuthorizeWindow : Window
             }
             else
             {
-                Label ErrorLabel = this.Find<Label>("ErrorLabel");
+                Label ErrorLabel = this.Find<Label>("ErrorLabel")!;
                 ErrorLabel.IsVisible = true;
                 ErrorLabel.Content = "Неправильный код";
             }
         }
         catch (Exception ex)
         {
-            Label ErrorLabel = this.Find<Label>("ErrorLabel");
+            Label ErrorLabel = this.Find<Label>("ErrorLabel")!;
             ErrorLabel.IsVisible = true;
             ErrorLabel.Content = "Ошибка соединения";
         }

@@ -12,4 +12,8 @@
 	<Style Selector="TimePicker TextBlock">
 		<Setter Property="Margin" Value="0"/>
 	</Style>
+	
+	<Style Selector="TextBox" >
+		<Setter Property="IsEnabled" Value="False"/>
+	</Style>
 </Styles>

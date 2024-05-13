@@ -1,18 +1,16 @@
 ﻿using Avalonia;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Styling;
 using DynamicData;
 using ReactiveUI;
 using Session2v2.Models;
 using Session2v2.Services;
-using Session2v2.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Session2v2.ViewModels
@@ -40,11 +38,7 @@ namespace Session2v2.ViewModels
                 if (SelectedRequest != null && SelectedRequest.Guest.AvatarBytes != null)
                 {
                     SelectedRequest.ConvertAvatarByteToBitmap();
-                    IsAvatarEqualsNull = false;
                 }
-
-                else
-                    IsAvatarEqualsNull = true;
             }
         }
 
@@ -104,13 +98,6 @@ namespace Session2v2.ViewModels
             set { _message = this.RaiseAndSetIfChanged(ref _message, value); }
         }
 
-        private bool _isAvatarEqualsNull;
-
-        public bool IsAvatarEqualsNull
-        {
-            get { return _isAvatarEqualsNull; }
-            set { _isAvatarEqualsNull = this.RaiseAndSetIfChanged(ref _isAvatarEqualsNull, value); }
-        }
 
         private string? _passportNumber;
 
@@ -127,15 +114,6 @@ namespace Session2v2.ViewModels
             get { return _isPassportSearchEnable; }
             set { _isPassportSearchEnable = this.RaiseAndSetIfChanged(ref _isPassportSearchEnable, value); }
         }
-
-
-        //private bool _isDataLoading = true;
-
-        //public bool IsDataLoading
-        //{
-        //    get { return _isDataLoading; }
-        //    set { _isDataLoading = this.RaiseAndSetIfChanged(ref _isDataLoading, value); }
-        //}
 
         private bool _isDataLoaded = false;
 
@@ -186,13 +164,17 @@ namespace Session2v2.ViewModels
             set { _changeThemeButtonIcon = this.RaiseAndSetIfChanged(ref _changeThemeButtonIcon, value); }
         }
 
+
+        //private readonly string MoonFilePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Assets", "moon.png");
+        
+        //public readonly string SunFilePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Assets", "sun.png");
+
+        
         public MainWindowViewModel()
         {
             this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
             
-            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            string filePath = Path.Combine(projectPath, "Assets", "moon.png");
-            ChangeThemeButtonIcon = new Bitmap(filePath);
+            ChangeThemeButtonIcon = new Bitmap(AssetLoader.Open(new Uri("avares://Session2v2/Assets/moon.png")));
             
             CreateAsync();
         }
@@ -202,6 +184,7 @@ namespace Session2v2.ViewModels
             GetContentAsync();
             LoadText();
         }
+        
         private async Task LoadText()
         {
             LoadingText = "Загрузка";
@@ -224,10 +207,6 @@ namespace Session2v2.ViewModels
             IsPassportSearchEnable = PassportNumber?.Length == 6;
         }
 
-        /// <summary>
-        /// Возвращает содержимое для списков заявок, отделений, типов заявок и статусов
-        /// </summary>
-        /// <returns></returns>
         private async Task GetContentAsync()
         {
             try
@@ -250,21 +229,18 @@ namespace Session2v2.ViewModels
 
         public void ChangeTheme()
         {
-            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            string moonfilePath = Path.Combine(projectPath, "Assets", "sun.png");
-
-            string sunPath = Path.Combine(projectPath, "Assets", "moon.png");
-            if (Application.Current.RequestedThemeVariant == ThemeVariant.Light)
+            if (Application.Current.RequestedThemeVariant == ThemeVariant.Light || Application.Current.RequestedThemeVariant == null)
             {
                 Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
-                ChangeThemeButtonIcon = new Bitmap(moonfilePath);
+                ChangeThemeButtonIcon = new Bitmap(AssetLoader.Open(new Uri("avares://Session2v2/Assets/sun.png")));
             }
             else
             {
                 Application.Current.RequestedThemeVariant = ThemeVariant.Light;
-                ChangeThemeButtonIcon = new Bitmap(sunPath);
+                ChangeThemeButtonIcon = new Bitmap(AssetLoader.Open(new Uri("avares://Session2v2/Assets/moon.png")));
             }
         }
+        
         private void Filter()
         {
             var filteredList = new List<Request>(requests);

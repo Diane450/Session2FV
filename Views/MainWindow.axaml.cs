@@ -26,7 +26,5 @@ namespace Session2v2.Views
             var window = new ReportWindow();
             window.ShowDialog(this);
         }
-
-
     }
 }
