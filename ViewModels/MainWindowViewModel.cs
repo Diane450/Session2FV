@@ -164,12 +164,6 @@ namespace Session2v2.ViewModels
             set { _changeThemeButtonIcon = this.RaiseAndSetIfChanged(ref _changeThemeButtonIcon, value); }
         }
 
-
-        //private readonly string MoonFilePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Assets", "moon.png");
-        
-        //public readonly string SunFilePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Assets", "sun.png");
-
-        
         public MainWindowViewModel()
         {
             this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());

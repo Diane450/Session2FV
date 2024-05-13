@@ -20,8 +20,7 @@ namespace Session2v2.ViewModels
             get { return _selectedDateStart; }
             set
             {
-                if (value != null && DateTime.TryParse(value.ToString(), out DateTime date))
-                    _selectedDateStart = this.RaiseAndSetIfChanged(ref _selectedDateStart, value);
+                _selectedDateStart = this.RaiseAndSetIfChanged(ref _selectedDateStart, value);
             }
         }
 
@@ -32,8 +31,7 @@ namespace Session2v2.ViewModels
             get { return _selectedDateEnd; }
             set
             {
-                if (value != null && DateTime.TryParse(value.ToString(), out DateTime date))
-                    _selectedDateEnd = this.RaiseAndSetIfChanged(ref _selectedDateEnd, value);
+                _selectedDateEnd = this.RaiseAndSetIfChanged(ref _selectedDateEnd, value);
             }
         }
 

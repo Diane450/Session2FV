@@ -8,11 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
+using Avalonia.Platform;
 
 namespace Session2v2.Models
 {
     public class Report
     {
+        public Document PdfDoc {  get; set; }
+
         public DateOnly[] DateRange { get; set; }
 
         public int AcceptedRequestsCount { get; set; }
@@ -52,41 +55,74 @@ namespace Session2v2.Models
             }
             catch (Exception ex)
             {
-
+                throw new Exception();
             }
-            
+        }
+
+        private void CreateTitle(string text)
+        {
+            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.TTF");
+            BaseFont fgBaseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+            var title = new Paragraph(text, new Font(fgBaseFont, 14, Font.BOLD, new BaseColor(0, 0, 0)))
+            {
+                SpacingAfter = 25f,
+                SpacingBefore = 25f,
+                Alignment = Element.ALIGN_CENTER
+            };
+            PdfDoc.Add(title);
         }
 
         public void CreateReport()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            var pdfDoc = new Document(PageSize.A4, 40f, 40f, 60f, 60f);
+            PdfDoc = new Document(PageSize.A4, 40f, 40f, 60f, 60f);
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            PdfWriter.GetInstance(pdfDoc, new FileStream(desktopPath + $"\\Отчет {DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf", FileMode.Create));
-            pdfDoc.Open();
+            PdfWriter.GetInstance(PdfDoc, new FileStream(desktopPath + $"\\Отчет {DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf", FileMode.Create));
+            PdfDoc.Open();
 
             string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.TTF");
-
             BaseFont fgBaseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font fgFont = new Font(fgBaseFont, 14, Font.NORMAL, new BaseColor(0, 0, 0));
 
-            string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            string filePath = Path.Combine(projectPath, "Assets", "report-logo.png");
+            AddReportLogo();
 
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
-            {
-                var png = Image.GetInstance(System.Drawing.Image.FromStream(fs), ImageFormat.Png);
-                png.ScalePercent(25f);
-                png.SetAbsolutePosition(pdfDoc.Left, pdfDoc.Top);
-                pdfDoc.Add(png);
-            }
             var spacer = new Paragraph("")
             {
                 SpacingAfter = 10f,
                 SpacingBefore = 10f
             };
-            pdfDoc.Add(spacer);
+            PdfDoc.Add(spacer);
 
+            var title = new Paragraph($"ОТЧЕТ ПОСЕЩАЕМОСТИ ПРЕДПРИЯТИЯ ЗА ПЕРОИД \r ОТ {DateRange[0]} ДО {DateRange[1]}", new Font(fgBaseFont, 14, Font.BOLD, new BaseColor(0, 0, 0)))
+            {
+                SpacingAfter = 25f,
+                Alignment = Element.ALIGN_CENTER
+            };
+            PdfDoc.Add(title);
+
+            AddHeaderTable(fgFont);
+
+            AddStatisticsTable(fgFont);
+
+            AddStatisticsTablePrivateMeeting(fgFont);
+
+            AddStatisticsTableGroupMeeting(fgFont);
+
+            PdfDoc.Close();
+        }
+
+        private void AddReportLogo()
+        {
+            var image = AssetLoader.Open(new Uri("avares://Session2v2/Assets/report-logo.png"));
+            var png = Image.GetInstance(System.Drawing.Image.FromStream(image), ImageFormat.Png);
+            png.ScalePercent(25f);
+            png.SetAbsolutePosition(PdfDoc.Left, PdfDoc.Top);
+            PdfDoc.Add(png);
+        }
+
+        private void AddHeaderTable(Font fgFont)
+        {
             var headerTable = new PdfPTable(new[] { .75f })
             {
                 HorizontalAlignment = 0,
@@ -94,33 +130,22 @@ namespace Session2v2.Models
                 DefaultCell = { MinimumHeight = 22f },
             };
 
-            var title = new Paragraph($"ОТЧЕТ ПОСЕЩАЕМОСТИ ПРЕДПРИЯТИЯ ЗА ПЕРОИД \r ОТ {DateRange[0]} ДО {DateRange[1]}", new Font(fgBaseFont, 14, Font.BOLD, new BaseColor(0, 0, 0)))
-            {
-                SpacingAfter = 25f,
-                Alignment = Element.ALIGN_CENTER
-            };
-            pdfDoc.Add(title);
-
             PdfPCell cell = new PdfPCell(new Phrase($"Дата: {DateTime.Now.ToString("dd.MM.yyyy")}", fgFont));
             cell.Border = Rectangle.NO_BORDER;
             headerTable.AddCell(cell);
-            
+
             cell.Phrase = new Phrase("Отдел: Общий отдел", fgFont);
             headerTable.AddCell(cell);
 
             cell.Phrase = new Phrase($"Автор: {CurrentUser.FullName}", fgFont);
             headerTable.AddCell(cell);
 
-            pdfDoc.Add(headerTable);
+            PdfDoc.Add(headerTable);
+        }
 
-            var statisticsTitle = new Paragraph($"Общая статистика", new Font(fgBaseFont, 14, Font.BOLD, new BaseColor(0, 0, 0)))
-            {
-                SpacingAfter = 25f,
-                SpacingBefore = 25f,
-                Alignment = Element.ALIGN_CENTER
-            };
-            pdfDoc.Add(statisticsTitle);
-
+        private void AddStatisticsTable(Font fgFont)
+        {
+            CreateTitle("Общая статистика");
             var statisticsTitleTable = new PdfPTable(new[] { .75f })
             {
                 HorizontalAlignment = 0,
@@ -129,35 +154,27 @@ namespace Session2v2.Models
             };
 
             PdfPCell acceptedRequestsCell = new PdfPCell(new Phrase($"Одобренные заявки: {AcceptedRequestsCount}", fgFont));
-            cell.Border = Rectangle.NO_BORDER;
             statisticsTitleTable.AddCell(acceptedRequestsCell);
 
             PdfPCell allequestsCell = new PdfPCell(new Phrase($"Общее количество заявок: {TotalRequestsCount}", fgFont));
-            cell.Border = Rectangle.NO_BORDER;
             statisticsTitleTable.AddCell(allequestsCell);
 
             PdfPCell deniedRequestscell = new PdfPCell(new Phrase($"Отклоненные заявки: {DeniedRequestsCount}", fgFont));
-            cell.Border = Rectangle.NO_BORDER;
             statisticsTitleTable.AddCell(deniedRequestscell);
 
-            pdfDoc.Add(statisticsTitleTable);
+            PdfDoc.Add(statisticsTitleTable);
+        }
 
+        private void AddStatisticsTablePrivateMeeting(Font fgFont)
+        {
+            CreateTitle("Cтатистика по подразделениям. Личные посещения");
             
-            var statisticsTitleDepartmentPrivate = new Paragraph($"Cтатистика по подразделениям. Личные посещения", new Font(fgBaseFont, 14, Font.BOLD, new BaseColor(0, 0, 0)))
-            {
-                SpacingAfter = 25f,
-                SpacingBefore = 25f,
-                Alignment = Element.ALIGN_CENTER
-            };
-            pdfDoc.Add(statisticsTitleDepartmentPrivate);
-
             var statisticsDepartmentPrivateTable = new PdfPTable(new[] { .1f, .1f })
             {
                 HorizontalAlignment = 0,
                 WidthPercentage = 75,
                 DefaultCell = { MinimumHeight = 22f },
             };
-
 
             foreach (var item in PrivateRequestsDepartment)
             {
@@ -168,16 +185,12 @@ namespace Session2v2.Models
                 PdfPCell privateRequestsDepartmentCellValue = new PdfPCell(new Phrase(count, fgFont));
                 statisticsDepartmentPrivateTable.AddCell(privateRequestsDepartmentCellValue);
             }
-            pdfDoc.Add(statisticsDepartmentPrivateTable);
+            PdfDoc.Add(statisticsDepartmentPrivateTable);
+        }
 
-
-            var statisticsTitleDepartmentGroup = new Paragraph($"Cтатистика по подразделениям. Групповые посещения", new Font(fgBaseFont, 14, Font.BOLD, new BaseColor(0, 0, 0)))
-            {
-                SpacingAfter = 25f,
-                SpacingBefore = 25f,
-                Alignment = Element.ALIGN_CENTER
-            };
-            pdfDoc.Add(statisticsTitleDepartmentGroup);
+        private void AddStatisticsTableGroupMeeting(Font fgFont)
+        {
+            CreateTitle("Cтатистика по подразделениям.Групповые посещения");
 
             var statisticsDepartmentGroupTable = new PdfPTable(new[] { .1f, .1f })
             {
@@ -185,7 +198,6 @@ namespace Session2v2.Models
                 WidthPercentage = 75,
                 DefaultCell = { MinimumHeight = 22f },
             };
-
 
             foreach (var item in GroupRequestsDepartment)
             {
@@ -196,9 +208,7 @@ namespace Session2v2.Models
                 PdfPCell privateRequestsDepartmentCellValue = new PdfPCell(new Phrase(count, fgFont));
                 statisticsDepartmentGroupTable.AddCell(privateRequestsDepartmentCellValue);
             }
-            pdfDoc.Add(statisticsDepartmentGroupTable);
-
-            pdfDoc.Close();
+            PdfDoc.Add(statisticsDepartmentGroupTable);
         }
     }
 }
