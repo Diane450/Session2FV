@@ -13,25 +13,25 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Session2v2
-build_property.ProjectDir = C:\Users\Home\Desktop\Session2v2\
+build_property.ProjectDir = C:\Users\Home\Desktop\vsProjects\Session2v2\
 
-[C:/Users/Home/Desktop/Session2v2/App.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/Home/Desktop/Session2v2/Styles/MainWindowStyles.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Styles/MainWindowStyles.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/Home/Desktop/Session2v2/Views/AuthorizeWindow.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/AuthorizeWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/Home/Desktop/Session2v2/Views/MainWindow.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/Home/Desktop/Session2v2/Views/PassportWindow.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/PassportWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/Home/Desktop/Session2v2/Views/ReportWindow.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/ReportWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/Home/Desktop/Session2v2/Views/RequestWindow.axaml]
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/RequestWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

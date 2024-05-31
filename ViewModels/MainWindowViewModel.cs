@@ -167,9 +167,9 @@ namespace Session2v2.ViewModels
         public MainWindowViewModel()
         {
             this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
-            
+
             ChangeThemeButtonIcon = new Bitmap(AssetLoader.Open(new Uri("avares://Session2v2/Assets/moon.png")));
-            
+
             CreateAsync();
         }
 
@@ -178,7 +178,7 @@ namespace Session2v2.ViewModels
             GetContentAsync();
             LoadText();
         }
-        
+
         private async Task LoadText()
         {
             LoadingText = "Загрузка";
@@ -195,7 +195,7 @@ namespace Session2v2.ViewModels
                 }
             }
         }
-        
+
         private void PassportSearchEnable()
         {
             IsPassportSearchEnable = PassportNumber?.Length == 6;
@@ -234,9 +234,13 @@ namespace Session2v2.ViewModels
                 ChangeThemeButtonIcon = new Bitmap(AssetLoader.Open(new Uri("avares://Session2v2/Assets/moon.png")));
             }
         }
-        
+
         private void Filter()
         {
+            if (SelectedType != null && SelectedDepartment != null && SelectedStatus != null)
+            {
+
+            }
             var filteredList = new List<Request>(requests);
 
             if (SelectedType != TypeList[0] && SelectedType != null)
@@ -257,7 +261,7 @@ namespace Session2v2.ViewModels
             FilteredRequests.Clear();
             FilteredRequests.AddRange(filteredList);
 
-            if (FilteredRequests.Count != 0)
+            if (FilteredRequests.Any())
             {
                 Message = "";
                 IsFilteredListNotNull = true;
@@ -269,8 +273,8 @@ namespace Session2v2.ViewModels
                 Message = "Нет заявок по выбранным категориям";
             }
         }
-        
-        public void FindByPassportNumber() 
+
+        public void FindByPassportNumber()
         {
             SelectedDepartment = DepartmentList[0];
             SelectedStatus = StatusesList[0];
