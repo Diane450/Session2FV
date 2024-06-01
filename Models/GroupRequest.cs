@@ -17,7 +17,8 @@ namespace Session2v2.Models
             GroupDeniedRequest groupDeniedRequest = new GroupDeniedRequest
             {
                 GroupRequestId = Meeting.Id,
-                DeniedReasonId = Meeting.DeniedReason.Id
+                DeniedReasonId = Meeting.DeniedReason!.Id,
+                CreationDate = Meeting.DateFrom,
             };
             await DBCall.DenyGroupRequestAsync(groupDeniedRequest);
         }
@@ -44,9 +45,9 @@ namespace Session2v2.Models
                 GroupRequestId = Meeting.Id,
                 DateVisit = (DateOnly)Meeting.DateVisit,
                 Time = (TimeOnly)Meeting.Time,
+                CreationDate = Meeting.DateTo
             };
             await DBCall.AcceptGroupRequest(acceptedGroupRequest);
-
         }
     }
 }

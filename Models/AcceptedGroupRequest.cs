@@ -14,5 +14,6 @@ namespace Session2v2.Models
 
         public TimeOnly Time { get; set; }
 
+        public DateOnly CreationDate { get; set; }
     }
 }

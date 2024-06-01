@@ -14,5 +14,8 @@ namespace Session2v2.Models
 
         public TimeOnly Time { get; set; }
 
+        public string ClientEmail { get; set; } = null!;
+
+        public DateOnly CreationDate { get; set; }
     }
 }

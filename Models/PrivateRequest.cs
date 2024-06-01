@@ -22,7 +22,9 @@ namespace Session2v2.Models
             PrivateDeniedRequest privateDeniedRequest = new PrivateDeniedRequest
             {
                 PrivateRequestId = Meeting.Id,
-                DeniedReasonId = Meeting.DeniedReason.Id
+                DeniedReasonId = Meeting.DeniedReason!.Id,
+                CreationDate = Meeting.DateFrom,
+                ClientEmail = Guest.Email
             };
             await DBCall.DenyPrivateRequestAsync(privateDeniedRequest);
         }
@@ -44,6 +46,8 @@ namespace Session2v2.Models
                 PrivateRequestId = Meeting.Id,
                 Time = (TimeOnly)Meeting.Time,
                 DateVisit = (DateOnly)Meeting.DateVisit,
+                ClientEmail = Guest.Email,
+                CreationDate = Meeting.DateFrom
             };
             await DBCall.AcceptPrivateRequest(acceptedPrivateRequest);
         }
