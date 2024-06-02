@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" Width="860" Height="432" MaxWidth="860" MaxHeight="432" MinWidth="860" MinHeight="432"
+        xmlns:vm="using:Session2v2.ViewModels"
+		x:Class="Session2v2.EmployeeWindow"
+		x:DataType="vm:EmployeeWindowViewModel"
+        Title="Терминал общего отдела"
+		Icon="/Assets/icon.png"
+		WindowStartupLocation="CenterScreen"
+		xmlns:local="clr-namespace:Session2v2.Services">
+
+	<Window.Resources>
+		<local:ImageConverter x:Key="ImageConverter"/>
+	</Window.Resources>
+
+	<Window.Resources>
+		<local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+	</Window.Resources>
+
+	<Window.Styles>
+		<StyleInclude Source="/Styles/EmployeeStyles.axaml"/>
+	</Window.Styles>
+	
+	<StackPanel Orientation="Horizontal">
+		<StackPanel>
+			<Image Source="{Binding SelectedEmployee.AvatarBitmap, Converter={StaticResource ImageConverter}}" MaxHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+			
+			<Button Content="Изменить фото профиля" Click="ChangePhoto" HorizontalAlignment="Center" Margin="15 20 0 0"/>
+		</StackPanel>
+
+		<Grid ColumnDefinitions="*, *, *, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 20 0 0">
+			<TextBlock Text="Полное имя: " Grid.Column="0" Grid.Row="0" />
+			<TextBlock Text="Отдел: " IsVisible="{Binding SelectedEmployee.Department, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="0" Grid.Row="1"/>
+			<TextBlock Text="Подразделение: " IsVisible="{Binding SelectedEmployee.Subdepartment, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="0" Grid.Row="2"/>
+			<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="3"/>
+			<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="4"/>
+			<TextBlock Text="Роль пользователя в системе: " Grid.Column="0" Grid.Row="5"/>
+
+			<TextBox Text="{Binding SelectedEmployee.FullName}" Grid.Column="1" Grid.Row="0" />
+			<TextBlock Text="{Binding SelectedEmployee.Department.Name} " IsVisible="{Binding SelectedEmployee.Department, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="1" Grid.Row="1"/>
+			<TextBlock Text="{Binding SelectedEmployee.Subdepartment.SubdepartmentName}" IsVisible="{Binding SelectedEmployee.Subdepartment, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="1" Grid.Row="2"/>
+			<TextBox Text="{Binding PassportNumber}" MaxLength="6" Grid.Column="1" Grid.Row="3"/>
+			<TextBox Text="{Binding PassportSeries}" MaxLength="4" Grid.Column="1" Grid.Row="4"/>
+			<TextBlock Text="{Binding SelectedEmployee.EmployeeUserType.Type}" Grid.Column="1" Grid.Row="5"/>
+			
+			<StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
+				<Button Content="Изменить" IsEnabled="{Binding IsButtonEnabled}" FontSize="20"  Command="{Binding SaveChanges}" Margin="10 0 20 0" ToolTip.Tip="Изменить информацию о сотруднике"/>
+
+				<Image Source="/Assets/information.png" Height="20" HorizontalAlignment="Left" Margin="10 0 0 0">
+					<ToolTip.Tip>
+						<TextBlock FontSize="14" Text="Чтобы обновить информацию о сотруднике, заполните ВСЕ поля, включая изображение"/>
+					</ToolTip.Tip>
+				</Image>
+			</StackPanel>
+			
+			<TextBlock Text="{Binding Message}" Foreground="IndianRed" Grid.Column="1" Grid.Row="7" Margin="0 20 0 0"/>
+		</Grid>
+	</StackPanel>
+</Window>

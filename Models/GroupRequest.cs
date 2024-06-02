@@ -14,7 +14,7 @@ namespace Session2v2.Models
     {
         public override async Task DenyRequest()
         {
-            GroupDeniedRequest groupDeniedRequest = new GroupDeniedRequest
+            GroupDeniedRequest groupDeniedRequest = new()
             {
                 GroupRequestId = Meeting.Id,
                 DeniedReasonId = Meeting.DeniedReason!.Id,

@@ -82,7 +82,7 @@ namespace Session2v2.Models
 
             string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.TTF");
             BaseFont fgBaseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            Font fgFont = new Font(fgBaseFont, 14, Font.NORMAL, new BaseColor(0, 0, 0));
+            Font fgFont = new(fgBaseFont, 14, Font.NORMAL, new BaseColor(0, 0, 0));
 
             AddReportLogo();
 
@@ -136,7 +136,7 @@ namespace Session2v2.Models
             cell.Phrase = new Phrase("Отдел: Общий отдел", fgFont);
             headerTable.AddCell(cell);
 
-            cell.Phrase = new Phrase($"Автор: {CurrentUser.FullName}", fgFont);
+            cell.Phrase = new Phrase($"Автор: {CurrentUser.Employee.FullName}", fgFont);
             headerTable.AddCell(cell);
 
             PdfDoc.Add(headerTable);

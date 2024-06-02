@@ -8,6 +8,6 @@ namespace Session2v2.Models
 {
     public static class CurrentUser
     {
-        public static string FullName { get; set; } = null!;
+        public static Employee Employee { get; set; } = null!;
     }
 }

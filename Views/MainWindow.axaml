@@ -14,127 +14,193 @@
 	<Window.Resources>
 		<local:ImageConverter x:Key="ImageConverter"/>
 	</Window.Resources>
+
+	<Window.Resources>
+		<local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+	</Window.Resources>
 	
 	<Window.Styles>
 		    <StyleInclude Source="/Styles/MainWindowStyles.axaml"/>
 	</Window.Styles>
 	
-	<StackPanel >
+	<StackPanel>
 		<TextBlock Text="{Binding LoadingText}" VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding IsDataLoading}"/>
 		
 		<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding !IsDataLoadedSuccess}">
 			<TextBlock Text="Ошибка соединения" Foreground="IndianRed"/>
 			<Button VerticalAlignment="Center" HorizontalAlignment="Center" Content="Перезагрузить" Command="{Binding CreateAsync}"/>
 		</StackPanel>
-		
-		<Grid ColumnDefinitions="*, *" IsVisible="{Binding IsDataLoaded}">
-			
-			<StackPanel Orientation="Horizontal" Height="100" Grid.Column="0" >
-				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Отдел:" Margin="10 10 10 0" FontSize="16"/>
-					<ComboBox ItemsSource="{Binding DepartmentList}" VerticalAlignment="Center" Padding="0" Width="225" Height="40" SelectedItem="{Binding SelectedDepartment}" SelectedValueBinding="{Binding Id}" Margin="10" ToolTip.Tip="Фильтрация по подразделению">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock FontSize="16" Text="{Binding Name}" />
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</StackPanel>
+		<TabControl Margin="5" SelectedIndex="0">
+			<TabItem Header="Заявки" IsVisible="{Binding IsDataLoaded}">
+				<StackPanel>
+					<Grid ColumnDefinitions="*, *" IsVisible="{Binding IsDataLoaded}">
+						<StackPanel Orientation="Horizontal" Height="100" Grid.Column="0" >
+							<StackPanel Orientation="Vertical">
+								<TextBlock Text="Отдел:" Margin="10 10 10 0" FontSize="16"/>
+								<ComboBox ItemsSource="{Binding DepartmentList}" VerticalAlignment="Center" Padding="0" Width="225" Height="40" SelectedItem="{Binding SelectedDepartment}" SelectedValueBinding="{Binding Id}" Margin="10" ToolTip.Tip="Фильтрация по подразделению">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock FontSize="16" Text="{Binding Name}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
 
-				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Статус:" Margin="10 10 10 0" FontSize="16"/>
-					<ComboBox ItemsSource="{Binding StatusesList}" VerticalAlignment="Center" Width="175" Padding="0" Margin="10" Height="40" SelectedItem="{Binding SelectedStatus}" SelectedValueBinding="{Binding Id}" ToolTip.Tip="Фильтрация по статусу">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock FontSize="16" Text="{Binding Name}" />
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</StackPanel>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Text="Статус:" Margin="10 10 10 0" FontSize="16"/>
+								<ComboBox ItemsSource="{Binding StatusesList}" VerticalAlignment="Center" Width="175" Padding="0" Margin="10" Height="40" SelectedItem="{Binding SelectedStatus}" SelectedValueBinding="{Binding Id}" ToolTip.Tip="Фильтрация по статусу">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock FontSize="16" Text="{Binding Name}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
 
-				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Тип:" Margin="10 10 10 0" FontSize="16"/>
-					<ComboBox ItemsSource="{Binding TypeList}" VerticalAlignment="Center" Width="250" Padding="0" Height="40" SelectedItem="{Binding SelectedType}" SelectedValueBinding="{Binding Id}" Margin="10" ToolTip.Tip="Фильтрация по типу заявки">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock FontSize="16" Text="{Binding Name}" />
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</StackPanel>
+							<StackPanel Orientation="Vertical">
+								<TextBlock Text="Тип:" Margin="10 10 10 0" FontSize="16"/>
+								<ComboBox ItemsSource="{Binding TypeList}" VerticalAlignment="Center" Width="250" Padding="0" Height="40" SelectedItem="{Binding SelectedType}" SelectedValueBinding="{Binding Id}" Margin="10" ToolTip.Tip="Фильтрация по типу заявки">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock FontSize="16" Text="{Binding Name}" />
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
 
-				<StackPanel Orientation="Horizontal">
-					<StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin=" 0 -10 0 0">
-						<TextBlock Text="Поиск:" Margin="10 10 10 0" FontSize="16"/>
-						<TextBox Height="40" Margin="10" Padding="10 0 0 0" IsEnabled="True" VerticalContentAlignment="Center" FontSize="16" Width="100" ToolTip.Tip="Поиск посетителя по номеру паспорта" MaxLength="6" Text="{Binding PassportNumber}"/>
+							<StackPanel Orientation="Horizontal">
+								<StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin=" 0 -10 0 0">
+									<TextBlock Text="Поиск:" Margin="10 10 10 0" FontSize="16"/>
+									<TextBox Height="40" Margin="10" Padding="10 0 0 0" IsEnabled="True" VerticalContentAlignment="Center" FontSize="16" Width="100" ToolTip.Tip="Поиск посетителя по номеру паспорта" MaxLength="6" Text="{Binding PassportNumber}"/>
+								</StackPanel>
+								<Button Content="Найти" Margin="10 20 0 0" Command="{Binding FindByPassportNumber}" IsEnabled="{Binding IsPassportSearchEnable}" Height="40" Padding="10"/>
+
+							</StackPanel>
+
+							<Button Content="Создать отчет" Click="OpenReportWindow" Height="40" Padding="10" Margin="10 20 10 0"/>
+
+							<TextBlock Text="{Binding Message}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="IndianRed" Margin="10 20 10 0"/>
+
+						</StackPanel>
+
+						<Button Command="{Binding ChangeTheme}" Height="50" Width="50" Background="Transparent" Grid.Column="1" CornerRadius="100" HorizontalAlignment="Right" Margin="10 20 10 10" VerticalAlignment="Center">
+							<Image Source="{Binding ChangeThemeButtonIcon}" Margin="0" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						</Button>
+					</Grid>
+
+					<Grid ColumnDefinitions="200, 300, 1600" Height="750" MinHeight="560" HorizontalAlignment="Left" IsVisible="{Binding IsFilteredListNotNull}" MaxWidth="1040">
+						<ListBox ItemsSource="{Binding FilteredRequests}" SelectedItem="{Binding SelectedRequest}" SelectionMode="Single" Width="200" Grid.Column="0" HorizontalAlignment="Left">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Guest.LastName}"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+					
+					
+						<Image Source="{Binding SelectedRequest.Guest.AvatarBitmap, Converter={StaticResource ImageConverter}}" Grid.Column="1" MaxHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+						<Grid ColumnDefinitions="*, *, *, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 20 0 0">
+							<TextBlock Text="Имя: " Grid.Column="0" Grid.Row="0" />
+							<TextBlock Text="Фамилия: " Grid.Column="0" Grid.Row="1"/>
+							<TextBlock Text="Отчество: " Grid.Column="0" Grid.Row="2"/>
+							<TextBlock Text="Номер телефона: " Grid.Column="0" Grid.Row="3"/>
+							<TextBlock Text="Почта: " Grid.Column="0" Grid.Row="4"/>
+							<TextBlock Text="Примечание: " Grid.Column="0" Grid.Row="5"/>
+							<TextBlock Text="День рождения: " Grid.Column="0" Grid.Row="6"/>
+							<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="7"/>
+							<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="8"/>
+
+							<TextBlock Text="{Binding SelectedRequest.Guest.Name}" Grid.Column="1" Grid.Row="0" />
+							<TextBlock Text="{Binding SelectedRequest.Guest.LastName}" Grid.Column="1" Grid.Row="1"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.Patronymic}" Grid.Column="1" Grid.Row="2"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.Phone}" Grid.Column="1" Grid.Row="3"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.Email}" Grid.Column="1" Grid.Row="4"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.Note}" Grid.Column="1" Grid.Row="5"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.Birthday}" Grid.Column="1" Grid.Row="6"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.PassportSeries}" Grid.Column="1" Grid.Row="7"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.PassportNumber}" Grid.Column="1" Grid.Row="8"/>
+
+							<TextBlock Text="Тип посещения: " Grid.Column="2" Grid.Row="0"/>
+							<TextBlock Text="Организация: " Grid.Column="2" Grid.Row="1"/>
+							<TextBlock Text="Начало действия пропуска: " Grid.Column="2" Grid.Row="2"/>
+							<TextBlock Text="Конец действия пропуска: " Grid.Column="2" Grid.Row="3"/>
+							<TextBlock Text="Отдел: " Grid.Column="2" Grid.Row="4"/>
+							<TextBlock Text="Сотрудник: " Grid.Column="2" Grid.Row="5"/>
+							<TextBlock Text="Цель: " Grid.Column="2" Grid.Row="6"/>
+							<TextBlock Text="Статус: " Grid.Column="2" Grid.Row="7"/>
+
+
+							<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType.Name}" Grid.Column="3" Grid.Row="0"/>
+							<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="3" Grid.Row="1"/>
+							<TextBlock Text="{Binding SelectedRequest.Meeting.DateFrom}" Grid.Column="3" Grid.Row="2"/>
+							<TextBlock Text="{Binding SelectedRequest.Meeting.DateTo}" Grid.Column="3" Grid.Row="3"/>
+							<TextBlock Text="{Binding SelectedRequest.Meeting.Department.Name}" Grid.Column="3" Grid.Row="4"/>
+							<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="3" Grid.Row="5"/>
+							<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="3" Grid.Row="6"/>
+							<TextBlock Text="{Binding SelectedRequest.Meeting.Status.Name}"  Grid.Column="3" Grid.Row="7"/>
+							<Button Content="Изменить" FontSize="20" Grid.Column="3" Grid.Row="8" Click="Change" Margin="10 0 20 0" ToolTip.Tip="Изменить статус заявки"/>
+						</Grid>
+					</Grid>
+				</StackPanel>
+			</TabItem>
+			<TabItem Header="Сотрудники" IsVisible="{Binding IsAdmin}">
+				<StackPanel>
+					<Grid ColumnDefinitions="*, *" IsVisible="{Binding IsDataLoaded}">
+						<StackPanel Orientation="Horizontal" Height="100" Grid.Column="0" >
+							
+							<StackPanel Orientation="Horizontal">
+								<StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin=" 0 -10 0 0">
+									<TextBlock Text="Поиск:" Margin="10 10 10 0" FontSize="16"/>
+									<TextBox Height="40" Margin="0 10 10 10" Padding="10 0 0 0" IsEnabled="True" Width="400" VerticalContentAlignment="Center" FontSize="16"  ToolTip.Tip="Поиск сотрудника по ФИО"  Text="{Binding SearchEmployee}"/>
+								</StackPanel>
+
+								<StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin=" 0 -10 0 0">
+									<Button Height="40" Content="Добавить нового сотрудника" Click="AddNewEmployee" Width="250" Margin="10 40 10 10" Padding="10 0 0 0" VerticalContentAlignment="Center" FontSize="16" ToolTip.Tip="Добавить нового сотрудника"/>
+								</StackPanel>
+
+							</StackPanel>
+
+							<TextBlock Text="{Binding MessageEmployeeFound}" VerticalAlignment="Center" HorizontalAlignment="Center"  Foreground="IndianRed" Margin="10 20 10 0"/>
+
+						</StackPanel>
+
+						<Button Command="{Binding ChangeTheme}" Height="50" Width="50" Background="Transparent" Grid.Column="1" CornerRadius="100" HorizontalAlignment="Right" Margin="10 20 10 10" VerticalAlignment="Center">
+							<Image Source="{Binding ChangeThemeButtonIcon}" Margin="0" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						</Button>
+					</Grid>
+
+						<Grid ColumnDefinitions="400, 300, 1600" Height="750" MinHeight="560" HorizontalAlignment="Left" MaxWidth="1040" IsVisible="{Binding IsEmployeeFound}">
+							<ListBox ItemsSource="{Binding FilteredEmployees}" SelectedItem="{Binding SelectedEmployee}" SelectionMode="Single" Width="400" Grid.Column="0" HorizontalAlignment="Left">
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding FullName}"/>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+
+							<Image Source="{Binding SelectedEmployee.AvatarBitmap, Converter={StaticResource ImageConverter}}" Grid.Column="1" MaxHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+							<Grid ColumnDefinitions="*, *, *, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 20 0 0">
+								<TextBlock Text="Полное имя: " Grid.Column="0" Grid.Row="0" />
+								<TextBlock Text="Отдел: " IsVisible="{Binding SelectedEmployee.Department, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="0" Grid.Row="1"/>
+								<TextBlock Text="Подразделение: " IsVisible="{Binding SelectedEmployee.Subdepartment, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="0" Grid.Row="2"/>
+								<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="3"/>
+								<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="4"/>
+								<TextBlock Text="Роль пользователя в системе: " Grid.Column="0" Grid.Row="5"/>
+
+								<TextBlock Text="{Binding SelectedEmployee.FullName}" Grid.Column="1" Grid.Row="0" />
+								<TextBlock Text="{Binding SelectedEmployee.Department.Name} " IsVisible="{Binding SelectedEmployee.Department, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="1" Grid.Row="1"/>
+								<TextBlock Text="{Binding SelectedEmployee.Subdepartment.SubdepartmentName}" IsVisible="{Binding SelectedEmployee.Subdepartment, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="1" Grid.Row="2"/>
+								<TextBlock Text="{Binding SelectedEmployee.PassportNumber}" Grid.Column="1" Grid.Row="3"/>
+								<TextBlock Text="{Binding SelectedEmployee.PassportSeries}" Grid.Column="1" Grid.Row="4"/>
+								<TextBlock Text="{Binding SelectedEmployee.EmployeeUserType.Type}" Grid.Column="1" Grid.Row="5"/>
+
+								<Button Content="Изменить" FontSize="20" Grid.Column="1" Grid.Row="6" Click="ChangeEmployee" Margin="10 0 20 0" ToolTip.Tip="Изменить информацию о сотруднике"/>
+							</Grid>
+						</Grid>
 					</StackPanel>
-					<Button Content="Найти" Margin="10 20 0 0" Command="{Binding FindByPassportNumber}" IsEnabled="{Binding IsPassportSearchEnable}" Height="40" Padding="10"/>
-
-				</StackPanel>
-
-				<Button Content="Создать отчет" Click="OpenReportWindow" Height="40" Padding="10" Margin="10 20 10 0"/>
-
-				<TextBlock Text="{Binding Message}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="IndianRed" Margin="10 20 10 0"/>
-
-			</StackPanel>
-			
-			<Button Command="{Binding ChangeTheme}" Height="50" Width="50" Background="Transparent" Grid.Column="1" CornerRadius="100" HorizontalAlignment="Right" Margin="10 20 10 10" VerticalAlignment="Center">
-				<Image Source="{Binding ChangeThemeButtonIcon}" Margin="0" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			</Button>
-		</Grid>
-
-		<Grid ColumnDefinitions="200, 300, 1600" Height="750" MinHeight="560" HorizontalAlignment="Left" IsVisible="{Binding IsFilteredListNotNull}" MaxWidth="1040">
-			<ListBox ItemsSource="{Binding FilteredRequests}" SelectedItem="{Binding SelectedRequest}" SelectionMode="Single" Width="200" Grid.Column="0" HorizontalAlignment="Left">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding Guest.LastName}"/>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
-			
-			<Image Source="{Binding SelectedRequest.Guest.AvatarBitmap, Converter={StaticResource ImageConverter}}" Grid.Column="1" MaxHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-			
-			<Grid ColumnDefinitions="*, *, *, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 20 0 0">
-				<TextBlock Text="Имя: " Grid.Column="0" Grid.Row="0" />
-				<TextBlock Text="Фамилия: " Grid.Column="0" Grid.Row="1"/>
-				<TextBlock Text="Отчество: " Grid.Column="0" Grid.Row="2"/>
-				<TextBlock Text="Номер телефона: " Grid.Column="0" Grid.Row="3"/>
-				<TextBlock Text="Почта: " Grid.Column="0" Grid.Row="4"/>
-				<TextBlock Text="Примечание: " Grid.Column="0" Grid.Row="5"/>
-				<TextBlock Text="День рождения: " Grid.Column="0" Grid.Row="6"/>
-				<TextBlock Text="Серия паспорта: " Grid.Column="0" Grid.Row="7"/>
-				<TextBlock Text="Номер паспорта: " Grid.Column="0" Grid.Row="8"/>
-
-				<TextBlock Text="{Binding SelectedRequest.Guest.Name}" Grid.Column="1" Grid.Row="0" />
-				<TextBlock Text="{Binding SelectedRequest.Guest.LastName}" Grid.Column="1" Grid.Row="1"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.Patronymic}" Grid.Column="1" Grid.Row="2"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.Phone}" Grid.Column="1" Grid.Row="3"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.Email}" Grid.Column="1" Grid.Row="4"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.Note}" Grid.Column="1" Grid.Row="5"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.Birthday}" Grid.Column="1" Grid.Row="6"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.PassportSeries}" Grid.Column="1" Grid.Row="7"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.PassportNumber}" Grid.Column="1" Grid.Row="8"/>
-
-				<TextBlock Text="Тип посещения: " Grid.Column="2" Grid.Row="0"/>
-				<TextBlock Text="Организация: " Grid.Column="2" Grid.Row="1"/>
-				<TextBlock Text="Начало действия пропуска: " Grid.Column="2" Grid.Row="2"/>
-				<TextBlock Text="Конец действия пропуска: " Grid.Column="2" Grid.Row="3"/>
-				<TextBlock Text="Отдел: " Grid.Column="2" Grid.Row="4"/>
-				<TextBlock Text="Сотрудник: " Grid.Column="2" Grid.Row="5"/>
-				<TextBlock Text="Цель: " Grid.Column="2" Grid.Row="6"/>
-				<TextBlock Text="Статус: " Grid.Column="2" Grid.Row="7"/>
-
-
-				<TextBlock Text="{Binding SelectedRequest.Meeting.MeetingType.Name}" Grid.Column="3" Grid.Row="0"/>
-				<TextBlock Text="{Binding SelectedRequest.Guest.Organization}" Grid.Column="3" Grid.Row="1"/>
-				<TextBlock Text="{Binding SelectedRequest.Meeting.DateFrom}" Grid.Column="3" Grid.Row="2"/>
-				<TextBlock Text="{Binding SelectedRequest.Meeting.DateTo}" Grid.Column="3" Grid.Row="3"/>
-				<TextBlock Text="{Binding SelectedRequest.Meeting.Department.Name}" Grid.Column="3" Grid.Row="4"/>
-				<TextBlock Text="{Binding SelectedRequest.Meeting.FullNameEmployee}" Grid.Column="3" Grid.Row="5"/>
-				<TextBlock Text="{Binding SelectedRequest.Meeting.VisitPurpose}" Grid.Column="3" Grid.Row="6"/>
-				<TextBlock Text="{Binding SelectedRequest.Meeting.Status.Name}"  Grid.Column="3" Grid.Row="7"/>
-				<Button Content="Изменить" FontSize="20" Grid.Column="3" Grid.Row="8" Click="Change" Margin="10 0 20 0" ToolTip.Tip="Изменить статус заявки"/>
-			</Grid>
-		</Grid>
+			</TabItem>
+		</TabControl>
 	</StackPanel>
 </Window>

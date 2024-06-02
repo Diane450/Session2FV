@@ -18,10 +18,10 @@ public partial class AuthorizeWindow : Window
         try
         {
             TextBox textBox = this.Find<TextBox>("Code")!;
-            string name = await DBCall.AuthorizeAsync(textBox.Text!);
-            if (name != null)
+            Employee employee = await DBCall.AuthorizeAsync(textBox.Text!);
+            if (employee != null)
             {
-                CurrentUser.FullName = name;
+                CurrentUser.Employee = employee;
                 var window = new MainWindow();
                 window.Show();
                 Close();

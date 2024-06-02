@@ -15,7 +15,7 @@ namespace Session2v2.Views
         private async void Change(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            var dataContext = (MainWindowViewModel)button.DataContext;
+            var dataContext = (MainWindowViewModel)button.DataContext!;
             var selectedRequest = dataContext.SelectedRequest;
             var window = await RequestWindow.CreateAsync(selectedRequest);
             window.ShowDialog(this);
@@ -24,6 +24,23 @@ namespace Session2v2.Views
         private void OpenReportWindow(object sender, RoutedEventArgs e)
         {
             var window = new ReportWindow();
+            window.ShowDialog(this);
+        }
+
+        private void ChangeEmployee(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var dataContext = (MainWindowViewModel)button.DataContext;
+            var selectedEmployee = dataContext.SelectedEmployee;
+            var window = new EmployeeWindow(selectedEmployee);
+            window.ShowDialog(this);
+        }
+
+        private void AddNewEmployee(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var dataContext = (MainWindowViewModel)button.DataContext!;
+            var window = new AddEmployeeWindow(dataContext);
             window.ShowDialog(this);
         }
     }

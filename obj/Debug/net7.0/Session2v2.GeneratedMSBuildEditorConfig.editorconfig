@@ -18,10 +18,22 @@ build_property.ProjectDir = C:\Users\Home\Desktop\vsProjects\Session2v2\
 [C:/Users/Home/Desktop/vsProjects/Session2v2/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Styles/AddEmployeeStyles.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Styles/EmployeeStyles.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/Home/Desktop/vsProjects/Session2v2/Styles/MainWindowStyles.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/AddEmployeeWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/Home/Desktop/vsProjects/Session2v2/Views/AuthorizeWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/Home/Desktop/vsProjects/Session2v2/Views/EmployeeWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/Home/Desktop/vsProjects/Session2v2/Views/MainWindow.axaml]

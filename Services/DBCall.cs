@@ -29,7 +29,7 @@ namespace Session2v2.Services
         /// <param name="code"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task<string> AuthorizeAsync(string code)
+        public static async Task<Employee> AuthorizeAsync(string code)
         {
             string dataSerialized = JsonConvert.SerializeObject(code);
             StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
@@ -37,7 +37,9 @@ namespace Session2v2.Services
             if (response.IsSuccessStatusCode)
             {
                 string answer = response.Content.ReadAsStringAsync().Result;
-                return answer;
+                Employee employee = JsonConvert.DeserializeObject<Employee>(answer)!;
+
+                return employee;
             }
             throw new Exception();
         }
@@ -391,6 +393,66 @@ namespace Session2v2.Services
                 return JsonConvert.DeserializeObject<Dictionary<string, int>>(answer);
             }
             throw new Exception();
+        }
+
+        public static async Task<List<Employee>> GetEmployees()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetEmployees");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                List<Employee> employees = JsonConvert.DeserializeObject<List<Employee>>(answer)!;
+                return employees;
+            }
+            throw new Exception();
+        }
+
+        public static async Task SaveChangesEmployee(Employee employee)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(employee);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/SaveChangesEmployees", serializedContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+        }
+
+        public static async Task<ObservableCollection<EmployeeUserType>> GetUserTypes()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetUserTypes");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<EmployeeUserType> types = JsonConvert.DeserializeObject<ObservableCollection<EmployeeUserType>>(answer)!;
+                return types;
+            }
+            throw new Exception();
+        }
+
+        public static async Task<ObservableCollection<Subdepartment>> GetSubdepartment()
+        {
+            HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/GetSubdepartment");
+            if (response.IsSuccessStatusCode)
+            {
+                string answer = response.Content.ReadAsStringAsync().Result;
+                ObservableCollection<Subdepartment> types = JsonConvert.DeserializeObject<ObservableCollection<Subdepartment>>(answer)!;
+                return types;
+            }
+            throw new Exception();
+        }
+
+        public static async Task<string> AddNewEmployee(Employee employee)
+        {
+            string dataSerialized = JsonConvert.SerializeObject(employee);
+            StringContent serializedContent = new(dataSerialized, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + "/AddEmployee", serializedContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadAsStringAsync().Result;
+            }
+            else
+                return null;
         }
     }
 }

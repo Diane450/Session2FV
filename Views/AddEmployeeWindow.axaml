@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="860" Height="500" MaxWidth="860" MaxHeight="500" MinWidth="860" MinHeight="500"
+        x:Class="Session2v2.AddEmployeeWindow"
+        xmlns:vm="using:Session2v2.ViewModels"
+		x:DataType="vm:AddEmployeeWindowViewModel"
+        Title="Терминал общего отдела"
+		Icon="/Assets/icon.png"
+		WindowStartupLocation="CenterScreen"
+		xmlns:local="clr-namespace:Session2v2.Services">
+
+	<Window.Resources>
+		<local:ImageConverter x:Key="ImageConverter"/>
+	</Window.Resources>
+
+	<Window.Resources>
+		<local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+	</Window.Resources>
+
+	<Window.Styles>
+		<StyleInclude Source="/Styles/AddEmployeeStyles.axaml"/>
+	</Window.Styles>
+	
+	<StackPanel Orientation="Horizontal">
+		<StackPanel>
+			<Image Source="{Binding Employee.AvatarBitmap, Converter={StaticResource ImageConverter}}" MaxHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+			<Button Content="Изменить фото профиля" Click="ChangePhoto" HorizontalAlignment="Center" Margin="15 20 0 0"/>
+		</StackPanel>
+
+		<Grid ColumnDefinitions="300, 300, *, *" RowDefinitions="*, *, *, *, *, *, *, *, *" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 20 0 0">
+			<TextBlock Text="Полное имя: " Margin="10 20" FontSize="18" Grid.Column="0" Grid.Row="0" />
+			<TextBlock Text="Отдел или подразделение: " Margin="10 20" FontSize="18" Grid.Column="0" Grid.Row="1"/>
+			<!--<TextBlock Text="Подразделение: " IsVisible="{Binding Employee.Subdepartment, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="0" Grid.Row="2"/>-->
+			<TextBlock Text="Номер паспорта: " Margin="10 20" FontSize="18" Grid.Column="0" Grid.Row="3"/>
+			<TextBlock Text="Серия паспорта: " Margin="10 20" FontSize="18" Grid.Column="0" Grid.Row="4"/>
+			<TextBlock Text="Роль пользователя в системе: " FontSize="18" Margin="10 10" Grid.Column="0" Grid.Row="5"/>
+			<TextBlock Text="Код: " Grid.Column="0" Margin="10 20" FontSize="18" Grid.Row="6"/>
+
+			<TextBox Text="{Binding Employee.FullName}" Grid.Column="1" Margin="-100 0 0 0" FontSize="18" Grid.Row="0" />
+			<!--<TextBlock Text="{Binding Employee.Department.Name} " IsVisible="{Binding Employee.Department, Converter={StaticResource NullToVisibilityConverter}}" Grid.Column="1" Grid.Row="1"/>-->
+			<ComboBox ItemsSource="{Binding Deps}" SelectedItem="{Binding SelectedDeps}" FontSize="18" Grid.Column="1" Grid.Row="1"/>
+			<ComboBox ItemsSource="{Binding Departments}" Margin="0 -20 0 0" FontSize="18" IsVisible="{Binding IsDepartmentsSelected}" SelectedValueBinding="{Binding Id}" SelectedItem="{Binding SelectedDepartment}" DisplayMemberBinding="{Binding Name}"  Grid.Column="1" Grid.Row="2"/>
+			<ComboBox ItemsSource="{Binding Subdepartments}" Margin="0 -20 0 0" FontSize="18" IsVisible="{Binding !IsDepartmentsSelected}" SelectedValueBinding="{Binding Id}" SelectedItem="{Binding SelectedSubdepartment}" DisplayMemberBinding="{Binding SubdepartmentName}"  Grid.Column="1" Grid.Row="2"/>
+
+			<TextBox Text="{Binding PassportNumber}" Margin="-100 0 0 0" FontSize="18" MaxLength="6" Grid.Column="1" Grid.Row="3"/>
+			<TextBox Text="{Binding PassportSeries}" Margin="-100 0 0 0" FontSize="18" MaxLength="4" Grid.Column="1" Grid.Row="4"/>
+			<ComboBox ItemsSource="{Binding Types}" FontSize="18" DisplayMemberBinding="{Binding Type}" SelectedValueBinding="{Binding Id}" SelectedItem="{Binding SelectedType}" Grid.Column="1" Grid.Row="5"/>
+			<TextBox Text="{Binding Code}" MaxLength="6" Margin="-100 0 0 0" FontSize="18" Grid.Column="1" Grid.Row="6"/>
+			
+			<StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal">
+				<Button Content="Добавить" IsEnabled="{Binding IsButtonEnabled}" FontSize="20"  Command="{Binding Add}" Margin="10 0 20 0" ToolTip.Tip="Добавить информацию о сотруднике"/>
+				<Image Source="/Assets/information.png" Height="20" HorizontalAlignment="Left" Margin="10 0 0 0">
+					<ToolTip.Tip>
+						<TextBlock FontSize="14" Text="Чтобы добавить информацию о новом сотруднике, заполните ВСЕ поля, включая изображение. Обратите внимание, что у нового пользователя должен быть уникальный код для входа, иначе не удастся добавить информацию в базу"/>
+					</ToolTip.Tip>
+				</Image>
+			</StackPanel>
+			<TextBlock Text="{Binding Message}" Foreground="IndianRed" FontSize="18" Grid.Column="1" Grid.Row="8" Margin="0 20 0 0"/>
+		</Grid>
+	</StackPanel>
+</Window>

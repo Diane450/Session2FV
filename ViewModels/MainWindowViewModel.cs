@@ -164,9 +164,89 @@ namespace Session2v2.ViewModels
             set { _changeThemeButtonIcon = this.RaiseAndSetIfChanged(ref _changeThemeButtonIcon, value); }
         }
 
+        private bool _isAdmin = false;
+
+        public bool IsAdmin
+        {
+            get { return _isAdmin; }
+            set { _isAdmin = this.RaiseAndSetIfChanged(ref _isAdmin, value); }
+        }
+
+        private ObservableCollection<Employee> _employees;
+
+        public ObservableCollection<Employee> Employees
+        {
+            get { return _employees; }
+            set { _employees = this.RaiseAndSetIfChanged(ref _employees, value); }
+        }
+
+        private Employee _selectedEmployee;
+
+        public Employee SelectedEmployee
+        {
+            get { return _selectedEmployee; }
+            set
+            {
+                _selectedEmployee = this.RaiseAndSetIfChanged(ref _selectedEmployee, value);
+                if (SelectedEmployee != null && SelectedEmployee.Photo != null)
+                {
+                    SelectedEmployee.ConvertAvatarByteToBitmap();
+                }
+
+            }
+        }
+
+        private ObservableCollection<Employee> _filteredEmployees;
+
+        public ObservableCollection<Employee> FilteredEmployees
+        {
+            get { return _filteredEmployees; }
+            set { _filteredEmployees = this.RaiseAndSetIfChanged(ref _filteredEmployees, value); }
+        }
+
+        private string? _searchEmployee;
+
+        public string? SearchEmployee
+        {
+            get { return _searchEmployee; }
+            set
+            {
+                _searchEmployee = this.RaiseAndSetIfChanged(ref _searchEmployee, value);
+                var list = Employees.Where(e => e.FullName.ToLower().StartsWith(SearchEmployee)).ToList();
+                FilteredEmployees = new ObservableCollection<Employee>(list);
+                if (FilteredEmployees.Count<1)
+                {
+                    IsEmployeeFound = false;
+                    MessageEmployeeFound = "Совпадения не найдены";
+                }
+                else
+                {
+                    SelectedEmployee = FilteredEmployees[0];
+                    IsEmployeeFound = true;
+                    MessageEmployeeFound = "";
+                }
+            }
+        }
+
+        private bool _isEmployeeFound = true;
+
+        public bool IsEmployeeFound
+        {
+            get { return _isEmployeeFound; }
+            set { _isEmployeeFound = this.RaiseAndSetIfChanged(ref _isEmployeeFound, value); }
+        }
+
+        private string _messageEmployeeFound;
+
+        public string MessageEmployeeFound
+        {
+            get { return _messageEmployeeFound; }
+            set { _messageEmployeeFound = this.RaiseAndSetIfChanged(ref _messageEmployeeFound, value); }
+        }
+
         public MainWindowViewModel()
         {
-            this.WhenAnyValue(x => x.PassportNumber).Subscribe(_ => PassportSearchEnable());
+            this.WhenAnyValue(x => x.PassportNumber, x=>x.SearchEmployee).Subscribe(_ => PassportSearchEnable());
 
             ChangeThemeButtonIcon = new Bitmap(AssetLoader.Open(new Uri("avares://Session2v2/Assets/moon.png")));
 
@@ -212,6 +292,14 @@ namespace Session2v2.ViewModels
                 IsDataLoaded = true;
                 IsDataLoading = false;
                 IsFilteredListNotNull = true;
+                if (CurrentUser.Employee.EmployeeUserType.Id == 1)
+                {
+                    IsAdmin = true;
+                    Employees = new ObservableCollection<Employee>(await DBCall.GetEmployees());
+                    FilteredEmployees = new ObservableCollection<Employee>(Employees);
+                    SelectedEmployee = FilteredEmployees[0];
+                    //TODO: get employee data.
+                }
             }
             catch
             {

@@ -1,0 +1,18 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!--<Style Selector="TextBlock">
+		<Setter Property="Margin" Value="10 20"/>
+		<Setter Property="FontSize" Value="18"/>
+	</Style>-->
+
+	<Style Selector="Image">
+		<Setter Property="Margin" Value="15 30 0 0"/>
+	</Style>
+
+	<Style Selector="TextBox" >
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="Height" Value="50"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Width" Value="200"/>
+	</Style>
+</Styles>

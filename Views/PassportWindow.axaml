@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Session2v2.ViewModels"
-		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		mc:Ignorable="d" Width="460" Height="560" MaxWidth="460" MaxHeight="560" MinWidth="460" MinHeight="560"
         x:DataType="vm:PassportWindowViewModel"
 		x:Class="Session2v2.PassportWindow"
         Title="Терминал общего отдела"
